@@ -1,5 +1,7 @@
 'use strict';
 
+const StudyController = require('../controllers/study.controller');
+
 module.exports = [
   {
     path: '/api/studies',

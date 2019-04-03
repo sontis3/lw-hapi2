@@ -1,26 +1,24 @@
 'use strict';
 
-const Hapi = require('hapi');
-const studyRoutes = require('./routes/studies.routes');
+const app = require('./app');
 
-const server = Hapi.server({
+const config = {
   port: 3000,
   host: 'localhost',
-});
-
-server.route({
-  method: 'GET',
-  path: '/',
-  handler: (request, h) => {
-    return 'Hello, world!';
-  }
-});
-
-server.route(studyRoutes);
+};
 
 const init = async () => {
-  await server.start();
-  console.log(`Server running at: ${server.info.uri}`);
+  try {
+    // create the server
+    const server = await app.createServer(config);
+
+    // start the server
+    await server.start();
+    console.log(`Server running at: ${server.info.uri}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
 };
 
 process.on('unhandledRejection', err => {

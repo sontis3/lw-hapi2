@@ -2,6 +2,7 @@
 
 const app = require('./app');
 
+// конфигурация api
 const config = {
   port: 3000,
   host: 'localhost',
@@ -9,6 +10,9 @@ const config = {
 
 const init = async () => {
   try {
+    // connect to db
+    await app.connectMongoDb();
+
     // create the server
     const server = await app.createServer(config);
 

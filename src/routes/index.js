@@ -1,6 +1,7 @@
 "use strict";
 
-const studyRoutes = require('./studies.routes');
+const countryRoutes = require('./country.routes');
+const studyRoutes = require('./study.routes');
 
 module.exports.register = async server => {
   server.route({
@@ -11,6 +12,7 @@ module.exports.register = async server => {
     }
   });
 
+  server.route(countryRoutes);
   server.route(studyRoutes);
 
 };

@@ -28,14 +28,3 @@ module.exports = {
     return server;
   }
 };
-
-module.exports.createServer = async config => {
-  const server = Hapi.server(config);
-  // register plugins
-  // await plugins.register(server);
-
-  // register routes
-  await routes.register(server);
-
-  return server;
-};

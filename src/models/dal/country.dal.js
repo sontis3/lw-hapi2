@@ -11,13 +11,14 @@ automapper.createMap('dbCountry', 'apiCountry')
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
 
-  automapper.createMap('dbShortCountry', 'apiCountry')
+automapper.createMap('dbShortCountry', 'apiCountry')
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name_ru', opts => opts.mapFrom('name_ru'))
   .ignoreAllNonExisting();
 
-  automapper.createMap('apiCountry', 'dbCountry')
+automapper.createMap('apiCountry', 'dbCountry')
   .forMember('name_ru', opts => opts.mapFrom('name_ru'))
+  .forMember('name_en', opts => opts.mapFrom('name_en'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
 
@@ -40,9 +41,9 @@ module.exports = {
     }
 
     return query.exec()
-      .then(dbResult => { 
+      .then(dbResult => {
         if (filter.short !== true) {
-          return automapper.map('dbCountry', 'apiCountry', dbResult); 
+          return automapper.map('dbCountry', 'apiCountry', dbResult);
         } else {
           return automapper.map('dbShortCountry', 'apiCountry', dbResult);
         }
@@ -51,15 +52,18 @@ module.exports = {
 
   // Создать новую страну
   async create(apiModel) {
-    let result = mModel.init().then(() => {
-      return mModel.create(appModel);
-    });
-    return result;
+    const dbModel = automapper.map('apiCountry', 'dbCountry', apiModel);
+
+    return mModel.create(dbModel)
+      .then(dbResult => {
+        return automapper.map('dbCountry', 'apiCountry', dbResult);
+      });
   },
 
   // изменить страну
   async update(id, apiModel) {
-    return mModel.findByIdAndUpdate(id, appModel, { new: true }).exec();
+    const dbModel = automapper.map('apiCountry', 'dbCountry', apiModel);
+    return mModel.findByIdAndUpdate(id, dbModel, { new: true }).exec();
   },
 
   // удалить страну

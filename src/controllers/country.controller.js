@@ -11,8 +11,12 @@ module.exports = {
   async find(request, h) {
     const filter = request.query;
     const result = await Dal.find(filter)
-      .then(res => { return res; })
-      .catch(err => { return Boom.badRequest(err.message); });
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return Boom.badRequest(err.message);
+      });
     return result;
   },
 
@@ -25,11 +29,15 @@ module.exports = {
   async create(request, h) {
     const country = request.payload;
     const result = await Dal.create(country)
-      .then(res => { return res; })
-      .catch(err => { return Boom.badRequest(err.message); });
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return Boom.badRequest(err.message);
+      });
     return result;
   },
-  
+
   async findOne(request, h) {
     return Boom.notImplemented();
   },
@@ -38,5 +46,5 @@ module.exports = {
   },
   async delete(request, h) {
     return Boom.notImplemented();
-  }
-}
+  },
+};

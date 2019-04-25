@@ -26,5 +26,5 @@ module.exports = {
   },
   async getContentInfo(request, h) {
     return Boom.notImplemented();
-  }
-}
+  },
+};

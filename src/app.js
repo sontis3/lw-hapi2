@@ -1,20 +1,23 @@
-"use strict";
+'use strict';
 
 const mongoose = require('mongoose');
 const mongoDbUri = 'mongodb://localhost:27017/lw_lims';
 
-const Hapi = require("hapi");
+const Hapi = require('hapi');
 // const plugins = require("./plugins");
-const routes = require("./routes");
+const routes = require('./routes');
 
 module.exports = {
   connectMongoDb: async () => {
-    await mongoose.connect(mongoDbUri, { useNewUrlParser: true }).then(
-      () => { console.log(`app is connected to ${mongoDbUri}`); }).catch(
-        err => {
-          console.error("Could not connect to MongoDB...", err.stack);
-          process.exit(1);
-        });
+    await mongoose
+      .connect(mongoDbUri, { useNewUrlParser: true })
+      .then(() => {
+        console.log(`app is connected to ${mongoDbUri}`);
+      })
+      .catch(err => {
+        console.error('Could not connect to MongoDB...', err.stack);
+        process.exit(1);
+      });
   },
 
   createServer: async config => {
@@ -26,5 +29,5 @@ module.exports = {
     await routes.register(server);
 
     return server;
-  }
+  },
 };

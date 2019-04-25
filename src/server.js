@@ -6,6 +6,9 @@ const app = require('./app');
 const config = {
   port: 3000,
   host: 'localhost',
+  routes: {
+    cors: true,
+  },
 };
 
 const init = async () => {

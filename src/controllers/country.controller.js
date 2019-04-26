@@ -41,9 +41,34 @@ module.exports = {
   async findOne(request, h) {
     return Boom.notImplemented();
   },
+
   async update(request, h) {
-    return Boom.notImplemented();
+    const id = request.params.id;
+    const country = request.payload;
+    if (!country) {
+      return Boom.badData('No country request data');
+    }
+
+    // const appModel = automapper.map('ApiCustomer', 'Customer', customer);
+
+    let result = await Dal.update(id, country)
+      .then(dbResult => {
+        if (dbResult === null) {
+          return Boom.notFound(`Документ с id=${id} не найден!`);
+        }
+        return dbResult;
+        // return h.response(dbResult).code(204);
+      })
+      .catch(err => {
+        if (err.name === 'CastError') {
+          return Boom.notFound(err.message);
+        } else {
+          return Boom.badRequest(err.message);
+        }
+      });
+    return result;
   },
+
   async delete(request, h) {
     return Boom.notImplemented();
   },

@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-//Страна
+// Страна
 const countrySchema = new Schema({
-  name_ru: { required: true, type: String, unique: true },    // Наименование рус
-  name_en: { required: true, type: String, unique: true },    // Наименование англ.
-  enabled: { required: true, type: Boolean }                  // Валидность
+  name_ru: { required: true, type: String, unique: true }, // Наименование рус
+  name_en: { required: true, type: String, unique: true }, // Наименование англ.
+  enabled: { required: true, type: Boolean }, // Валидность
 });
 
 // countrySchema.pre('findOneAndUpdate', function(next) {

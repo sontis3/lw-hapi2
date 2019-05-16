@@ -70,6 +70,22 @@ module.exports = {
   },
 
   async delete(request, h) {
-    return Boom.notImplemented();
+    const id = request.params.id;
+    let result = await Dal.delete(id)
+      .then(dbResult => {
+        if (dbResult === null) {
+          return Boom.notFound(`Документ с id=${id} не найден!`);
+        }
+        return dbResult;
+        // return h.response(dbResult).code(204);
+      })
+      .catch(err => {
+        if (err.name === 'CastError') {
+          return Boom.notFound(err.message);
+        } else {
+          return Boom.badRequest(err.message);
+        }
+      });
+    return result;
   },
 };

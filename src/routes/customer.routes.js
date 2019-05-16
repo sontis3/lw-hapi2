@@ -1,11 +1,11 @@
 'use strict';
 
-const Controller = require('../controllers/country.controller');
+const Controller = require('../controllers/customer.controller');
 const Joi = require('joi');
 
 module.exports = [
   {
-    path: '/api/dir/countries',
+    path: '/api/dir/customers',
     method: 'GET',
     handler: Controller.find,
     options: {
@@ -23,36 +23,36 @@ module.exports = [
     },
   },
   {
-    path: '/api/dir/countries',
+    path: '/api/dir/customers',
     method: 'POST',
     handler: Controller.create,
-    options: {
-      validate: {
-        payload: {
-          name_ru: Joi.string()
-            .min(2)
-            .max(64),
-          name_en: Joi.string()
-            .min(2)
-            .max(64),
-          enabled: Joi.boolean(),
-        },
-      },
-    },
+    // options: {
+    //   validate: {
+    //     payload: {
+    //       name_ru: Joi.string()
+    //         .min(2)
+    //         .max(64),
+    //       name_en: Joi.string()
+    //         .min(2)
+    //         .max(64),
+    //       enabled: Joi.boolean(),
+    //     },
+    //   },
+    // },
   },
 
   {
-    path: '/api/dir/countries/{id}',
+    path: '/api/dir/customers/{id}',
     method: 'GET',
     handler: Controller.findOne,
   },
   {
-    path: '/api/dir/countries/{id}',
+    path: '/api/dir/customers/{id}',
     method: 'PUT',
     handler: Controller.update,
   },
   {
-    path: '/api/dir/countries/{id}',
+    path: '/api/dir/customers/{id}',
     method: 'DELETE',
     handler: Controller.delete,
   },

@@ -1,11 +1,11 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../models/dal/country.dal');
+const Dal = require('../models/dal/customer.dal');
 
 module.exports = {
-  // Получить список стран.
-  // description: По умолчанию все страны.
+  // Получить список заказчиков.
+  // description: По умолчанию все заказчики.
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(request, h) {
@@ -20,7 +20,7 @@ module.exports = {
     return result;
   },
 
-  // Создать новую страну
+  // Создать нового заказчика
   // {
   //   "name_ru": "Украина",
   //   "name_en": "Ukraine",
@@ -42,7 +42,6 @@ module.exports = {
     return Boom.notImplemented();
   },
 
-  // изменить страну
   async update(request, h) {
     const id = request.params.id;
     const country = request.payload;
@@ -70,7 +69,6 @@ module.exports = {
     return result;
   },
 
-  // Удалить страну
   async delete(request, h) {
     const id = request.params.id;
     let result = await Dal.delete(id)

@@ -10,6 +10,16 @@ automapper
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('country', opts => opts.mapFrom('country'))
   .forMember('zip_code', opts => opts.mapFrom('zip_code'))
+
+  .forMember('city', opts => opts.mapFrom('city'))
+  .forMember('region', opts => opts.mapFrom('region'))
+  .forMember('address_line_1', opts => opts.mapFrom('address_line_1'))
+  .forMember('address_line_2', opts => opts.mapFrom('address_line_2'))
+  .forMember('address_line_3', opts => opts.mapFrom('address_line_3'))
+  .forMember('email', opts => opts.mapFrom('email'))
+  .forMember('phone_1', opts => opts.mapFrom('phone_1'))
+  .forMember('phone_2', opts => opts.mapFrom('phone_2'))
+
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
 
@@ -25,6 +35,14 @@ automapper
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('country', opts => opts.mapFrom('countryId'))
   .forMember('zip_code', opts => opts.mapFrom('zip_code'))
+  .forMember('city', opts => opts.mapFrom('city'))
+  .forMember('region', opts => opts.mapFrom('region'))
+  .forMember('address_line_1', opts => opts.mapFrom('address_line_1'))
+  .forMember('address_line_2', opts => opts.mapFrom('address_line_2'))
+  .forMember('address_line_3', opts => opts.mapFrom('address_line_3'))
+  .forMember('email', opts => opts.mapFrom('email'))
+  .forMember('phone_1', opts => opts.mapFrom('phone_1'))
+  .forMember('phone_2', opts => opts.mapFrom('phone_2'))
   .ignoreAllNonExisting();
 
 module.exports = {

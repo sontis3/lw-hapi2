@@ -86,7 +86,7 @@ module.exports = {
   // изменить заказчика
   async update(id, apiModel) {
     const dbModel = automapper.map('apiCustomer', 'dbCustomer', apiModel);
-    return mModel.findByIdAndUpdate(id, dbModel, { new: true }).exec();
+    return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec();  // runValidators для проверки id country
   },
 
   // удалить заказчика

@@ -7,7 +7,12 @@ const Schema = mongoose.Schema;
 const schemaInstance = new Schema({
   name: { required: true, type: String, unique: true }, // Наименование
   enabled: { required: true, type: Boolean }, // Валидность
-  country: { type: Schema.Types.ObjectId, ref: 'Country' }, // ссылка на Страна
+  country: {
+    type: Schema.Types.ObjectId,
+    ref: 'Country',
+    // eslint-disable-next-line prettier/prettier
+    validate: v => mongoose.model('Country').findById(v).exec(),    // валидация наличия в базе id страны
+  }, // ссылка на Страна
   zip_code: { type: String }, // Почтовый индекс
   city: { type: String }, // Населённый пункт
   region: { type: String }, // Область/край/республика

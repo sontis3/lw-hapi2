@@ -8,7 +8,8 @@ automapper
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
-  .forMember('country', opts => opts.mapFrom('country'))
+  .forMember('country.id', opts => opts.mapFrom('country._id'))
+  .forMember('country.name_ru', opts => opts.mapFrom('country.name_ru'))
   .forMember('zip_code', opts => opts.mapFrom('zip_code'))
 
   .forMember('city', opts => opts.mapFrom('city'))
@@ -63,6 +64,7 @@ module.exports = {
       query = mModel.find(dbSelector);
     }
 
+    query.populate('country', 'name_ru');
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
         return automapper.map('dbCustomer', 'apiCustomer', dbResult);

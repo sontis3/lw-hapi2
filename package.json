@@ -23,6 +23,7 @@
   "homepage": "https://github.com/sontis3/lw-hapi2#readme",
   "dependencies": {
     "automapper-ts": "^1.9.0",
+    "bcrypt": "^3.0.6",
     "boom": "^7.3.0",
     "hapi": "^18.1.0",
     "joi": "^14.3.1",

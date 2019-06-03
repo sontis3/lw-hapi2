@@ -1,11 +1,12 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../models/dal/customer.dal');
+const Dal = require('../models/dal/auth.dal');
+const Bcrypt = require('bcrypt');
 
 module.exports = {
-  // Получить список заказчиков.
-  // description: По умолчанию все заказчики.
+  // Получить список пользователей.
+  // description: По умолчанию все пользователи.
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(request, h) {
@@ -20,10 +21,14 @@ module.exports = {
     return result;
   },
 
-  // Создать нового заказчика
-  async create(request, h) {
-    const customer = request.payload;
-    const result = await Dal.create(customer)
+  // Создать нового пользователя
+  async register(request, h) {
+    const user = request.payload;
+    user.enabled = true;
+    user.password = await Bcrypt.hash(user.password, 15).catch(err => {
+      return Boom.badImplementation(err.message);
+    });
+    const result = await Dal.create(user)
       .then(res => {
         return res;
       })
@@ -33,22 +38,22 @@ module.exports = {
     return result;
   },
 
-  // найти заказчика
+  // найти пользователя
   async findOne(request, h) {
     return Boom.notImplemented();
   },
 
-  // изменить заказчика
+  // изменить пользователя
   async update(request, h) {
     const id = request.params.id;
-    const customer = request.payload;
-    if (!customer) {
-      return Boom.badData('No customer request data');
+    const user = request.payload;
+    if (!user) {
+      return Boom.badData('No user request data');
     }
 
     // const appModel = automapper.map('ApiCustomer', 'Customer', customer);
 
-    let result = await Dal.update(id, customer)
+    let result = await Dal.update(id, user)
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Документ с id=${id} не найден!`);
@@ -66,7 +71,7 @@ module.exports = {
     return result;
   },
 
-  // удалить заказчика
+  // удалить пользователя
   async delete(request, h) {
     const id = request.params.id;
     let result = await Dal.delete(id)

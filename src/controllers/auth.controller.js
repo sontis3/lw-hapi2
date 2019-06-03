@@ -25,16 +25,40 @@ module.exports = {
   async register(request, h) {
     const user = request.payload;
     user.enabled = true;
-    user.password = await Bcrypt.hash(user.password, 15).catch(err => {
+    let result = await Bcrypt.hash(user.password, 15).catch(err => {
       return Boom.badImplementation(err.message);
     });
-    const result = await Dal.create(user)
+
+    // проверка что хеш создался нормально
+    if (Boom.isBoom(result)) {
+      return result;
+    }
+    user.password = result;
+    result = await Dal.create(user)
       .then(res => {
         return res;
       })
       .catch(err => {
         return Boom.badRequest(err.message);
       });
+    return result;
+  },
+
+  // вход(login)
+  async login(request, h) {
+    const { name } = request.payload;
+    let result = await Dal.findByName(name)
+      // .then(dbResult => {
+      //   return dbResult;
+      // })
+      .catch(err => {
+        if (err.name === 'CastError') {
+          return Boom.notFound(err.message);
+        } else {
+          return Boom.badRequest(err.message);
+        }
+      });
+
     return result;
   },
 

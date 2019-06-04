@@ -10,26 +10,18 @@ module.exports = {
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(request, h) {
     const filter = request.query;
-    const result = await Dal.find(filter)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        return Boom.badRequest(err.message);
-      });
+    const result = await Dal.find(filter).catch(err => {
+      return Boom.badRequest(err.message);
+    });
     return result;
   },
 
   // Создать нового заказчика
   async create(request, h) {
     const customer = request.payload;
-    const result = await Dal.create(customer)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        return Boom.badRequest(err.message);
-      });
+    const result = await Dal.create(customer).catch(err => {
+      return Boom.badRequest(err.message);
+    });
     return result;
   },
 

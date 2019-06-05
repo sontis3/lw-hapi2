@@ -3,6 +3,7 @@
 const Boom = require('boom');
 const Dal = require('../models/dal/auth.dal');
 const Bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
   // Создать нового пользователя
@@ -39,11 +40,14 @@ module.exports = {
       return Boom.badRequest('Пользователь деактивирован. Обратитесь к администратору системы.');
     }
 
+    const credential = { id: result.id };
     // проверка пароля
     result = await Bcrypt.compare(password, result.password)
       .then(res => {
         if (res) {
-          return { name: name, access_token: 'good' };
+          // const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256', expiresIn: '1h' });
+          const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256' });
+          return { name: name, access_token: token };
         } else {
           return Boom.badRequest('Неверные логин или пароль.');
         }

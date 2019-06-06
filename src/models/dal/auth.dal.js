@@ -55,9 +55,20 @@ module.exports = {
     });
   },
 
+  // получить пользователя по имени
   async findByName(userName) {
     return mModel
       .findOne({ name: userName })
+      .exec()
+      .then(dbResult => {
+        return automapper.map('dbUser', 'apiUser', dbResult);
+      });
+  },
+
+  // получить пользователя по id
+  async findById(id) {
+    return mModel
+      .findById(id)
       .exec()
       .then(dbResult => {
         return automapper.map('dbUser', 'apiUser', dbResult);

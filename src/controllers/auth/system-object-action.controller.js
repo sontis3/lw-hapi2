@@ -1,10 +1,10 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../../models/dal/auth/system-object.dal');
+const Dal = require('../../models/dal/auth/system-object-action.dal');
 
 module.exports = {
-  // Получить список системных объектов.
+  // Получить список действий системных объектов.
   // description: По умолчанию все объекты.
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
@@ -16,7 +16,7 @@ module.exports = {
     return result;
   },
 
-  // Создать новый системный объект
+  // Создать новое действие системного объекта
   async create(request, h) {
     const result = await Dal.create(request.payload).catch(err => {
       return Boom.badRequest(err.message);
@@ -28,7 +28,7 @@ module.exports = {
     return Boom.notImplemented();
   },
 
-  // изменить системный объект
+  // изменить действие системного объекта
   async update(request, h) {
     const id = request.params.id;
     if (!request.payload) {

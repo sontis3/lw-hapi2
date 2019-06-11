@@ -3,8 +3,12 @@
 const mModel = require('../../mongoose/auth/user.mongoose');
 const automapper = require('automapper-ts');
 
+let dbKey = 'dbUser';
+let dbShortKey = 'dbShortUser';
+let apiKey = 'apiUser';
+
 automapper
-  .createMap('dbUser', 'apiUser')
+  .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
@@ -17,13 +21,13 @@ automapper
   .ignoreAllNonExisting();
 
 automapper
-  .createMap('dbShortUser', 'apiUser')
+  .createMap(dbShortKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .ignoreAllNonExisting();
 
 automapper
-  .createMap('apiUser', 'dbUser')
+  .createMap(apiKey, dbKey)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('email', opts => opts.mapFrom('email'))
@@ -51,9 +55,9 @@ module.exports = {
 
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
-        return automapper.map('dbUser', 'apiUser', dbResult);
+        return automapper.map(dbKey, apiKey, dbResult);
       } else {
-        return automapper.map('dbShortUser', 'apiUser', dbResult);
+        return automapper.map(dbShortKey, apiKey, dbResult);
       }
     });
   },
@@ -64,7 +68,7 @@ module.exports = {
       .findOne({ name: userName })
       .exec()
       .then(dbResult => {
-        return automapper.map('dbUser', 'apiUser', dbResult);
+        return automapper.map(dbKey, apiKey, dbResult);
       });
   },
 
@@ -74,22 +78,22 @@ module.exports = {
       .findById(id)
       .exec()
       .then(dbResult => {
-        return automapper.map('dbUser', 'apiUser', dbResult);
+        return automapper.map(dbKey, apiKey, dbResult);
       });
   },
 
   // Создать нового пользователя
   async create(apiModel) {
-    const dbModel = automapper.map('apiUser', 'dbUser', apiModel);
+    const dbModel = automapper.map(apiKey, dbKey, apiModel);
 
     return mModel.create(dbModel).then(dbResult => {
-      return automapper.map('dbUser', 'apiUser', dbResult);
+      return automapper.map(dbKey, apiKey, dbResult);
     });
   },
 
   // изменить пользователя
   async update(id, apiModel) {
-    const dbModel = automapper.map('apiUser', 'dbUser', apiModel);
+    const dbModel = automapper.map(apiKey, dbKey, apiModel);
     return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec(); // runValidators для проверки id country
   },
 

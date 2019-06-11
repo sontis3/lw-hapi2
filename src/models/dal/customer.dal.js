@@ -3,8 +3,12 @@
 const mModel = require('../mongoose/customer.mongoose');
 const automapper = require('automapper-ts');
 
+let dbKey = 'dbCustomer';
+let dbShortKey = 'dbShortCustomer';
+let apiKey = 'apiCustomer';
+
 automapper
-  .createMap('dbCustomer', 'apiCustomer')
+  .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
@@ -25,13 +29,13 @@ automapper
   .ignoreAllNonExisting();
 
 automapper
-  .createMap('dbShortCustomer', 'apiCustomer')
+  .createMap(dbShortKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .ignoreAllNonExisting();
 
 automapper
-  .createMap('apiCustomer', 'dbCustomer')
+  .createMap(apiKey, dbKey)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('country', opts => opts.mapFrom('countryId'))
@@ -67,25 +71,25 @@ module.exports = {
     query.populate('country', 'name_ru');
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
-        return automapper.map('dbCustomer', 'apiCustomer', dbResult);
+        return automapper.map(dbKey, apiKey, dbResult);
       } else {
-        return automapper.map('dbShortCustomer', 'apiCustomer', dbResult);
+        return automapper.map(dbShortKey, apiKey, dbResult);
       }
     });
   },
 
   // Создать нового заказчика
   async create(apiModel) {
-    const dbModel = automapper.map('apiCustomer', 'dbCustomer', apiModel);
+    const dbModel = automapper.map(apiKey, dbKey, apiModel);
 
     return mModel.create(dbModel).then(dbResult => {
-      return automapper.map('dbCustomer', 'apiCustomer', dbResult);
+      return automapper.map(dbKey, apiKey, dbResult);
     });
   },
 
   // изменить заказчика
   async update(id, apiModel) {
-    const dbModel = automapper.map('apiCustomer', 'dbCustomer', apiModel);
+    const dbModel = automapper.map(apiKey, dbKey, apiModel);
     return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec(); // runValidators для проверки id country
   },
 

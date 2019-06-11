@@ -3,8 +3,12 @@
 const mModel = require('../../mongoose/auth/system-object.mongoose');
 const automapper = require('automapper-ts');
 
+let dbKey = 'dbSystemObject';
+let dbShortKey = 'dbShortSystemObject';
+let apiKey = 'apiSystemObject';
+
 automapper
-  .createMap('dbSystemObject', 'apiSystemObject')
+  .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
@@ -13,13 +17,13 @@ automapper
   .ignoreAllNonExisting();
 
 automapper
-  .createMap('dbShortSystemObject', 'apiSystemObject')
+  .createMap(dbShortKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
   .ignoreAllNonExisting();
 
 automapper
-  .createMap('apiSystemObject', 'dbSystemObject')
+  .createMap(apiKey, dbKey)
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
@@ -44,25 +48,25 @@ module.exports = {
 
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
-        return automapper.map('dbSystemObject', 'apiSystemObject', dbResult);
+        return automapper.map(dbKey, apiKey, dbResult);
       } else {
-        return automapper.map('dbShortSystemObject', 'apiSystemObject', dbResult);
+        return automapper.map(dbShortKey, apiKey, dbResult);
       }
     });
   },
 
   // Создать новый системный объект
   async create(apiModel) {
-    const dbModel = automapper.map('apiSystemObject', 'dbSystemObject', apiModel);
+    const dbModel = automapper.map(apiKey, dbKey, apiModel);
 
     return mModel.create(dbModel).then(dbResult => {
-      return automapper.map('dbSystemObject', 'apiSystemObject', dbResult);
+      return automapper.map(dbKey, apiKey, dbResult);
     });
   },
 
   // изменить системный объект
   async update(id, apiModel) {
-    const dbModel = automapper.map('apiSystemObject', 'dbSystemObject', apiModel);
+    const dbModel = automapper.map(apiKey, dbKey, apiModel);
     return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec();
   },
 

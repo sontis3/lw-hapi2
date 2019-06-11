@@ -2,6 +2,7 @@
 
 const authRoutes = require('./auth/auth.routes');
 const systemObjectRoutes = require('./auth/system-object.routes');
+const systemObjectActionRoutes = require('./auth/system-object-action.routes');
 
 const countryRoutes = require('./country.routes');
 const customerRoutes = require('./customer.routes');
@@ -18,6 +19,7 @@ module.exports.register = async server => {
 
   server.route(authRoutes);
   server.route(systemObjectRoutes);
+  server.route(systemObjectActionRoutes);
 
   server.route(countryRoutes);
   server.route(customerRoutes);

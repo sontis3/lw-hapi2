@@ -1,37 +1,36 @@
 'use strict';
 
-const mModel = require('../mongoose/country.mongoose');
+const mModel = require('../../mongoose/auth/system-object-action.mongoose');
 const automapper = require('automapper-ts');
 
-let dbKey = 'dbCountry';
-let dbShortKey = 'dbShortCountry';
-let apiKey = 'apiCountry';
+let dbKey = 'dbSystemObjectAction';
+let dbShortKey = 'dbShortSystemObjectAction';
+let apiKey = 'apiSystemObjectAction';
 
 automapper
   .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
-  .forMember('name_ru', opts => opts.mapFrom('name_ru'))
-  .forMember('name_en', opts => opts.mapFrom('name_en'))
+  .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
+
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
 
 automapper
   .createMap(dbShortKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
-  .forMember('name_ru', opts => opts.mapFrom('name_ru'))
+  .forMember('name', opts => opts.mapFrom('name'))
   .ignoreAllNonExisting();
 
 automapper
   .createMap(apiKey, dbKey)
-  .forMember('name_ru', opts => opts.mapFrom('name_ru'))
-  .forMember('name_en', opts => opts.mapFrom('name_en'))
+  .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
 
 module.exports = {
-  // Получить список стран.
-  // description: По умолчанию все страны.
+  // Получить список действий с системными объектами.
+  // description: По умолчанию все действия с системными объектами.
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(filter) {
@@ -42,7 +41,7 @@ module.exports = {
 
     let query;
     if (typeof filter.short !== 'undefined' && filter.short === true) {
-      query = mModel.find(dbSelector).select({ name_ru: 1 });
+      query = mModel.find(dbSelector).select({ name: 1 });
     } else {
       query = mModel.find(dbSelector);
     }
@@ -56,7 +55,7 @@ module.exports = {
     });
   },
 
-  // Создать новую страну
+  // Создать новое действие
   async create(apiModel) {
     const dbModel = automapper.map(apiKey, dbKey, apiModel);
 
@@ -65,13 +64,13 @@ module.exports = {
     });
   },
 
-  // изменить страну
+  // изменить действие
   async update(id, apiModel) {
     const dbModel = automapper.map(apiKey, dbKey, apiModel);
-    return mModel.findByIdAndUpdate(id, dbModel, { new: true }).exec();
+    return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec();
   },
 
-  // удалить страну
+  // удалить действие
   async delete(id) {
     return mModel.findByIdAndDelete(id).exec();
   },

@@ -1,6 +1,6 @@
 'use strict';
 
-const mModel = require('../mongoose/auth.mongoose');
+const mModel = require('../../mongoose/auth/user.mongoose');
 const automapper = require('automapper-ts');
 
 automapper
@@ -10,6 +10,8 @@ automapper
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('email', opts => opts.mapFrom('email'))
   .forMember('password', opts => opts.mapFrom('password'))
+  .forMember('role.id', opts => opts.mapFrom('role._id'))
+  .forMember('role.name', opts => opts.mapFrom('role.name'))
 
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
@@ -26,6 +28,7 @@ automapper
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('email', opts => opts.mapFrom('email'))
   .forMember('password', opts => opts.mapFrom('password'))
+  .forMember('role', opts => opts.mapFrom('roleId'))
   .ignoreAllNonExisting();
 
 module.exports = {

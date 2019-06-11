@@ -1,7 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../models/dal/auth.dal');
+const Dal = require('../../models/dal/auth/user.dal');
 const Bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // eslint-disable-next-line no-unused-vars

@@ -1,6 +1,6 @@
 'use strict';
 
-const Controller = require('../controllers/auth.controller');
+const Controller = require('../../controllers/auth/auth.controller');
 const Joi = require('joi');
 
 module.exports = [

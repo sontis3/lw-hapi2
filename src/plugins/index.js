@@ -2,7 +2,7 @@
 
 // node - e "console.log(require('crypto').randomBytes(256).toString('base64'));"
 const JWT_KEY = 'NeverShareYourSecret';
-const Dal = require('../models/dal/auth.dal');
+const Dal = require('../models/dal/auth/user.dal');
 
 var validate = async function(decoded, request) {
   // проверка на наличие такого активного пользователя

@@ -1,11 +1,11 @@
 'use strict';
 
-const Controller = require('../../controllers/auth/system-object-action.controller');
+const Controller = require('../../controllers/auth/role.controller');
 const Joi = require('joi');
 
 module.exports = [
   {
-    path: '/api/admin/system-objects-actions',
+    path: '/api/admin/roles',
     method: 'GET',
     handler: Controller.find,
     options: {
@@ -23,7 +23,7 @@ module.exports = [
     },
   },
   {
-    path: '/api/admin/system-objects-actions',
+    path: '/api/admin/roles',
     method: 'POST',
     handler: Controller.create,
     options: {
@@ -39,17 +39,17 @@ module.exports = [
   },
 
   {
-    path: '/api/admin/system-object-actions/{id}',
+    path: '/api/admin/roles/{id}',
     method: 'GET',
     handler: Controller.findOne,
   },
   {
-    path: '/api/admin/system-object-actions/{id}',
+    path: '/api/admin/roles/{id}',
     method: 'PUT',
     handler: Controller.update,
   },
   {
-    path: '/api/admin/system-object-actions/{id}',
+    path: '/api/admin/roles/{id}',
     method: 'DELETE',
     handler: Controller.delete,
   },

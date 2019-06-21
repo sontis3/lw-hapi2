@@ -12,13 +12,13 @@ const schemaInstance = new Schema({
     // eslint-disable-next-line prettier/prettier
     validate: v => mongoose.model('Role').findById(v).exec(),    // валидация наличия в базе id роли
   }, // ссылка на Роль
-  systemObject: {
+  system_object: {
     type: Schema.Types.ObjectId,
     ref: 'SystemObject',
     // eslint-disable-next-line prettier/prettier
     validate: v => mongoose.model('SystemObject').findById(v).exec(),    // валидация наличия в базе id Системного объекта
   }, // ссылка на Системный объект
-  systemObjectAction: {
+  system_object_action: {
     type: Schema.Types.ObjectId,
     ref: 'SystemObjectAction',
     // eslint-disable-next-line prettier/prettier

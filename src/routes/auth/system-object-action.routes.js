@@ -39,17 +39,17 @@ module.exports = [
   },
 
   {
-    path: '/api/admin/system-object-actions/{id}',
+    path: '/api/admin/system-objects-actions/{id}',
     method: 'GET',
     handler: Controller.findOne,
   },
   {
-    path: '/api/admin/system-object-actions/{id}',
+    path: '/api/admin/system-objects-actions/{id}',
     method: 'PUT',
     handler: Controller.update,
   },
   {
-    path: '/api/admin/system-object-actions/{id}',
+    path: '/api/admin/system-objects-actions/{id}',
     method: 'DELETE',
     handler: Controller.delete,
   },

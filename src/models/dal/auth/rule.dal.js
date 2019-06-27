@@ -1,22 +1,26 @@
 'use strict';
 
-const mModel = require('../../mongoose/auth/permission.mongoose');
+const mModel = require('../../mongoose/auth/rule.mongoose');
 const automapper = require('automapper-ts');
 
-let dbKey = 'dbPermission';
-let dbShortKey = 'dbShortPermission';
-let apiKey = 'apiPermission';
+let dbKey = 'dbRule';
+let dbShortKey = 'dbShortRule';
+let apiKey = 'apiRule';
 
 automapper
   .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
-  .forMember('name', opts => opts.mapFrom('name'))
   .forMember('role.id', opts => opts.mapFrom('role._id'))
   .forMember('role.name', opts => opts.mapFrom('role.name'))
-  .forMember('system_object.id', opts => opts.mapFrom('system_object._id'))
-  .forMember('system_object.name', opts => opts.mapFrom('system_object.name'))
-  .forMember('system_object_action.id', opts => opts.mapFrom('system_object_action._id'))
-  .forMember('system_object_action.name', opts => opts.mapFrom('system_object_action.name'))
+  .forMember('permissions', opts => opts.mapFrom('permissions'))
+  // .forMember('permissions.id', opts => opts.mapFrom('permissions._id'))
+  // .forMember('permissions.system_object.id', opts => opts.mapFrom('permissions.system_object._id'))
+  // .forMember('permissions.system_object.name', opts => opts.mapFrom('permissions.system_object.name'))
+  // .forMember('permissions.actions.id', opts => opts.mapFrom('permissions.actions._id'))
+  // // eslint-disable-next-line prettier/prettier
+  // .forMember('permissions.actions.system_object_action.id', opts => opts.mapFrom('permissions.actions.system_object_action._id'))
+  // // eslint-disable-next-line prettier/prettier
+  // .forMember('permissions.actions.system_object_action.name', opts => opts.mapFrom('permissions.actions.system_object_action.name'))
 
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
@@ -36,7 +40,7 @@ automapper
   .ignoreAllNonExisting();
 
 module.exports = {
-  // Получить список пользователей.
+  // Получить список правил доступа.
   // description: По умолчанию все пользователи.
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
@@ -53,13 +57,57 @@ module.exports = {
       query = mModel.find(dbSelector);
     }
 
-    return query.exec().then(dbResult => {
-      if (filter.short !== true) {
-        return automapper.map(dbKey, apiKey, dbResult);
-      } else {
-        return automapper.map(dbShortKey, apiKey, dbResult);
-      }
-    });
+    const qqq = [
+      {
+        _id: '5d0a155e3c74d8252884b8a6',
+        role: {
+          _id: '5d1211c76e5a7a3360afd760',
+          name: 'Admin',
+        },
+        createdAt: '2019-06-25T15:21:27.248+03:00',
+        updatedAt: '2019-06-25T15:21:27.248+03:00',
+        permissions: [
+          {
+            _id: '5d0a155e3c74d8252884b8a0',
+            system_object: {
+              _id: '5d08fea7af076512ec3336a4',
+              name: 'country',
+              createdAt: '2019-06-25T15:21:27.248+03:00',
+              updatedAt: '2019-06-25T15:21:27.248+03:00',
+            },
+            actions: [
+              { _id: '5d0a155e3c74d8252884b8a6', name: 'Read' },
+              { _id: '5d1240526e5a7a3360afd767', name: 'Create' },
+            ],
+          },
+          {
+            _id: '5d0a155e3c74d8252884b8a1',
+            system_object: {
+              _id: '5d138109623f9e2da45d79aa',
+              name: 'contact',
+              createdAt: '2019-06-25T15:21:27.248+03:00',
+              updatedAt: '2019-06-25T15:21:27.248+03:00',
+            },
+            actions: [
+              { _id: '5d0a155e3c74d8252884b8a6', name: 'Read' },
+              { _id: '5d1240526e5a7a3360afd767', name: 'Create' },
+              { _id: '5d1240696e5a7a3360afd768', name: 'Update' },
+              { _id: '5d1240736e5a7a3360afd769', name: 'Delete' },
+            ],
+          },
+        ],
+      },
+    ];
+    const aaa = automapper.map(dbKey, apiKey, qqq);
+    return aaa;
+
+    // return query.exec().then(dbResult => {
+    //   if (filter.short !== true) {
+    //     return automapper.map(dbKey, apiKey, dbResult);
+    //   } else {
+    //     return automapper.map(dbShortKey, apiKey, dbResult);
+    //   }
+    // });
   },
 
   // получить пользователя по имени

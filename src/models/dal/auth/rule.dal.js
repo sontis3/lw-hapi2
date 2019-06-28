@@ -123,13 +123,12 @@ automapper
 
 module.exports = {
   // Получить список правил доступа.
-  // description: По умолчанию все пользователи.
-  // Если имеется параметр enabled, то true - активные, false - неактивные
-  // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
+  // description: По умолчанию правила для всех ролей.
+  // Если имеется параметр roleId, то правила только этой роли
   async find(filter) {
     let dbSelector = {};
-    if (typeof filter.enabled !== 'undefined') {
-      dbSelector.enabled = filter.enabled;
+    if (typeof filter.roleId !== 'undefined') {
+      dbSelector.role = filter.roleId;
     }
 
     let query;
@@ -140,7 +139,8 @@ module.exports = {
     }
 
     // const retval = automapper.map(dbKey, apiKey, qqq);
-    const retval = morphism(schema, testData);
+    // const retval = morphism(schema, testData);
+    const retval = morphism(permissionSchema, testData[0].permissions);
     return retval;
 
     // return query.exec().then(dbResult => {

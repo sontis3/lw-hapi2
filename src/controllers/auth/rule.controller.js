@@ -4,10 +4,9 @@ const Boom = require('boom');
 const Dal = require('../../models/dal/auth/rule.dal');
 
 module.exports = {
-  // Получить список ролей.
-  // description: По умолчанию все роли.
-  // Если имеется параметр enabled, то true - активные, false - неактивные
-  // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
+  // Получить список правил ролей.
+  // description: По умолчанию правила для всех ролей.
+  // Если имеется параметр roleId, то правила только этой роли
   async find(request, h) {
     const filter = request.query;
     const result = await Dal.find(filter).catch(err => {

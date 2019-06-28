@@ -11,8 +11,7 @@ module.exports = [
     options: {
       validate: {
         query: {
-          enabled: Joi.boolean(),
-          short: Joi.boolean(),
+          roleId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
         },
         // https://github.com/hapijs/hapi/issues/3706  предоставление детальной информации о валидационной ошибке
         // ,

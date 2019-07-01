@@ -28,10 +28,9 @@ module.exports = [
     options: {
       validate: {
         payload: {
-          name: Joi.string()
-            .min(3)
-            .max(64),
-          enabled: Joi.boolean(),
+          roleId: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+          system_objectIds: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+          actionIds: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
         },
       },
     },

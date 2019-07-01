@@ -15,7 +15,7 @@ module.exports = {
     return result;
   },
 
-  // Создать новую роль
+  // Создать новые правила роли
   async create(request, h) {
     const result = await Dal.create(request.payload).catch(err => {
       return Boom.badRequest(err.message);

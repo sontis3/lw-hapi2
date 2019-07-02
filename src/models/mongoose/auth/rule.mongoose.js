@@ -12,19 +12,16 @@ const permissionSchema = new Schema({
   }, // ссылка на Системный объект
   actions: [
     {
-      system_object_action: {
-        type: Schema.Types.ObjectId,
-        ref: 'SystemObjectAction',
-        // eslint-disable-next-line prettier/prettier
-        validate: v => mongoose.model('SystemObjectAction').findById(v).exec(),    // валидация наличия в базе id Системного объекта
-      }, // ссылка на Действие над Системным объектом
-    },
+      type: Schema.Types.ObjectId,
+      ref: 'SystemObjectAction',
+      // eslint-disable-next-line prettier/prettier
+      validate: v => mongoose.model('SystemObjectAction').findById(v).exec(),    // валидация наличия в базе id Системного объекта
+    }, // ссылка на Действие над Системным объектом
   ],
 });
 
 // разрешение на действия с системными объектами
 const schemaInstance = new Schema({
-  name: { required: true, type: String, unique: true }, // Наименование
   role: {
     type: Schema.Types.ObjectId,
     ref: 'Role',
@@ -48,9 +45,12 @@ const schemaInstance = new Schema({
   updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });
 
-schemaInstance.pre('findOneAndUpdate', function(next) {
+schemaInstance.pre('findOneAndUpdate', function (next) {
   this._update.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Rule', schemaInstance);
+module.exports = {
+  RuleModel: mongoose.model('Rule', schemaInstance),
+  PermissionModel: mongoose.model('Permission', permissionSchema),
+};

@@ -1,46 +1,49 @@
 'use strict';
 
-const mModel = require('../../mongoose/auth/rule.mongoose');
+// const mModel = require('../../mongoose/auth/rule.mongoose');
+const { RuleModel, PermissionModel } = require('../../mongoose/auth/rule.mongoose');
 const automapper = require('automapper-ts');
 const morphism = require('morphism').morphism;
 
-const systemObjectSchema = {
-  id: '_id',
+// схема db->api маппинга морфизма
+const dbApiActionSchema = {
+  id: 'id',
   name: 'name',
 };
 
-const actionSchema = {
-  id: '_id',
-  name: 'name',
-};
-
-const permissionSchema = {
-  id: '_id',
-  system_object: {
-    path: 'system_object',
-    fn: (propertyValue, source) => {
-      return morphism(systemObjectSchema, propertyValue);
-    },
-  },
+const dbApiPermissionSchema = {
+  id: 'id',
+  'system_object.id': 'system_object.id',
+  'system_object.name': 'system_object.name',
   actions: {
     path: 'actions',
     fn: (propertyValue, source) => {
-      return morphism(actionSchema, propertyValue);
+      return morphism(dbApiActionSchema, propertyValue);
     },
   },
 };
 
-// схема маппинга морфизма
-const schema = {
-  id: '_id',
-  'role.id': 'role._id',
+const dbApiSchema = {
+  id: 'id',
+  'role.id': 'role.id',
   'role.name': 'role.name',
   permissions: {
     path: 'permissions',
     fn: (propertyValue, source) => {
-      return morphism(permissionSchema, propertyValue);
+      return morphism(dbApiPermissionSchema, propertyValue);
     },
   },
+};
+
+// схема api->db маппинга морфизма
+const apiDbSchema = {
+  role: 'roleId',
+  permissions: (iteratee, source, destination) => {
+    return iteratee.system_objectIds.map(item => ({ system_object: item, actions: iteratee.actionIds }));
+    // return { system_object: iteratee.system_objectIds, actions: iteratee.actionIds };
+  },
+  // 'permissions.system_object': 'system_objectIds',
+  // 'permissions.actions': 'actionIds',
 };
 
 const testData = [
@@ -115,10 +118,9 @@ automapper
 
 automapper
   .createMap(apiKey, dbKey)
-  .forMember('name', opts => opts.mapFrom('name'))
   .forMember('role', opts => opts.mapFrom('roleId'))
-  .forMember('system_object', opts => opts.mapFrom('system_objectId'))
-  .forMember('system_object_action', opts => opts.mapFrom('system_object_actionId'))
+  .forMember('permissions.system_object', opts => opts.mapFrom('system_objectIds'))
+  .forMember('permissions.system_object_action', opts => opts.mapFrom('actionIds'))
   .ignoreAllNonExisting();
 
 module.exports = {
@@ -131,31 +133,39 @@ module.exports = {
       dbSelector.role = filter.roleId;
     }
 
-    let query;
-    if (typeof filter.short !== 'undefined' && filter.short === true) {
-      query = mModel.find(dbSelector).select({ name: 1 });
-    } else {
-      query = mModel.find(dbSelector);
-    }
+    // const retval = morphism(dbApiPermissionSchema, testData[0].permissions);
+    // return retval;
 
-    // const retval = automapper.map(dbKey, apiKey, qqq);
-    // const retval = morphism(schema, testData);
-    const retval = morphism(permissionSchema, testData[0].permissions);
-    return retval;
+    let query = RuleModel.find(dbSelector);
+    query.populate([
+      {
+        path: 'role',
+        select: 'name',
+      },
+      {
+        path: 'permissions.system_object',
+        select: 'name',
+      },
+      {
+        path: 'permissions.actions',
+        select: 'name',
+      },
+    ]);
 
-    // return query.exec().then(dbResult => {
-    //   if (filter.short !== true) {
-    //     return automapper.map(dbKey, apiKey, dbResult);
-    //   } else {
-    //     return automapper.map(dbShortKey, apiKey, dbResult);
-    //   }
-    // });
+    return query.exec().then(dbResult => {
+      if (filter.short !== true) {
+        const retval = morphism(dbApiSchema, dbResult[0]);
+        return retval;
+        // return automapper.map(dbKey, apiKey, dbResult);
+      } else {
+        return automapper.map(dbShortKey, apiKey, dbResult);
+      }
+    });
   },
 
   // получить пользователя по имени
   async findByName(userName) {
-    return mModel
-      .findOne({ name: userName })
+    return RuleModel.findOne({ name: userName })
       .exec()
       .then(dbResult => {
         return automapper.map(dbKey, apiKey, dbResult);
@@ -164,19 +174,18 @@ module.exports = {
 
   // получить пользователя по id
   async findById(id) {
-    return mModel
-      .findById(id)
+    return RuleModel.findById(id)
       .exec()
       .then(dbResult => {
         return automapper.map(dbKey, apiKey, dbResult);
       });
   },
 
-  // Создать нового пользователя
+  // Создать новые правила роли
   async create(apiModel) {
-    const dbModel = automapper.map(apiKey, dbKey, apiModel);
+    const dbModel = morphism(apiDbSchema, apiModel);
 
-    return mModel.create(dbModel).then(dbResult => {
+    return RuleModel.create(dbModel).then(dbResult => {
       return automapper.map(dbKey, apiKey, dbResult);
     });
   },
@@ -184,11 +193,11 @@ module.exports = {
   // изменить пользователя
   async update(id, apiModel) {
     const dbModel = automapper.map(apiKey, dbKey, apiModel);
-    return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec(); // runValidators для проверки id country
+    return RuleModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec(); // runValidators для проверки id country
   },
 
   // удалить пользователя
   async delete(id) {
-    return mModel.findByIdAndDelete(id).exec();
+    return RuleModel.findByIdAndDelete(id).exec();
   },
 };

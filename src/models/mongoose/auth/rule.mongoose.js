@@ -14,6 +14,7 @@ const permissionSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'SystemObjectAction',
+      unique: true,
       // eslint-disable-next-line prettier/prettier
       validate: v => mongoose.model('SystemObjectAction').findById(v).exec(),    // валидация наличия в базе id Системного объекта
     }, // ссылка на Действие над Системным объектом
@@ -30,18 +31,6 @@ const schemaInstance = new Schema({
     validate: v => mongoose.model('Role').findById(v).exec(),    // валидация наличия в базе id роли
   }, // ссылка на Роль
   permissions: [permissionSchema],
-  // system_object: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'SystemObject',
-  //   // eslint-disable-next-line prettier/prettier
-  //   validate: v => mongoose.model('SystemObject').findById(v).exec(),    // валидация наличия в базе id Системного объекта
-  // }, // ссылка на Системный объект
-  // system_object_action: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'SystemObjectAction',
-  //   // eslint-disable-next-line prettier/prettier
-  //   validate: v => mongoose.model('SystemObjectAction').findById(v).exec(),    // валидация наличия в базе id Системного объекта
-  // }, // ссылка на Действие над Системным объектом
   createdAt: { required: true, type: Date, default: Date.now }, // дата создания документа
   updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });

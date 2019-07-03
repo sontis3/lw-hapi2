@@ -25,6 +25,7 @@ const schemaInstance = new Schema({
   role: {
     type: Schema.Types.ObjectId,
     ref: 'Role',
+    unique: true,
     // eslint-disable-next-line prettier/prettier
     validate: v => mongoose.model('Role').findById(v).exec(),    // валидация наличия в базе id роли
   }, // ссылка на Роль

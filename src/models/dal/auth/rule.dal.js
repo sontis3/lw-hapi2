@@ -40,10 +40,42 @@ const apiDbSchema = {
   role: 'roleId',
   permissions: (iteratee, source, destination) => {
     return iteratee.system_objectIds.map(item => ({ system_object: item, actions: iteratee.actionIds }));
-    // return { system_object: iteratee.system_objectIds, actions: iteratee.actionIds };
   },
-  // 'permissions.system_object': 'system_objectIds',
-  // 'permissions.actions': 'actionIds',
+};
+
+// схема db->api маппинга морфизма для ответа Model.Create
+// const dbApiActionCreateSchema = {
+//   id: 'id',
+//   name: 'name',
+// };
+
+const dbApiPermissionCreateSchema = {
+  id: 'id',
+  system_object: {
+    path: 'system_object',
+    fn: (propertyValue, source) => {
+      return propertyValue.toString();
+    },
+  },
+  actions: (iteratee, source, destination) => {
+    return iteratee.actions.map(item => item.toString());
+  },
+};
+
+const dbApiCreateSchema = {
+  id: 'id',
+  role: {
+    path: 'role',
+    fn: (propertyValue, source) => {
+      return propertyValue.toString();
+    },
+  },
+  permissions: {
+    path: 'permissions',
+    fn: (propertyValue, source) => {
+      return morphism(dbApiPermissionCreateSchema, propertyValue);
+    },
+  },
 };
 
 const testData = [
@@ -153,12 +185,11 @@ module.exports = {
     ]);
 
     return query.exec().then(dbResult => {
-      if (filter.short !== true) {
-        const retval = morphism(dbApiSchema, dbResult[0]);
-        return retval;
-        // return automapper.map(dbKey, apiKey, dbResult);
+      if (dbResult.length === 0) {
+        return [];
       } else {
-        return automapper.map(dbShortKey, apiKey, dbResult);
+        const result = morphism(dbApiSchema, dbResult[0]);
+        return result.permissions;
       }
     });
   },
@@ -186,7 +217,8 @@ module.exports = {
     const dbModel = morphism(apiDbSchema, apiModel);
 
     return RuleModel.create(dbModel).then(dbResult => {
-      return automapper.map(dbKey, apiKey, dbResult);
+      const retval = morphism(dbApiCreateSchema, dbResult);
+      return retval;
     });
   },
 

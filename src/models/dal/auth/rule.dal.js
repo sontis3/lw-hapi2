@@ -1,7 +1,7 @@
 'use strict';
 
 // const mModel = require('../../mongoose/auth/rule.mongoose');
-const { RuleModel, PermissionModel } = require('../../mongoose/auth/rule.mongoose');
+const { RuleModel } = require('../../mongoose/auth/rule.mongoose');
 const automapper = require('automapper-ts');
 const morphism = require('morphism').morphism;
 

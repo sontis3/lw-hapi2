@@ -2,6 +2,7 @@
 
 const mModel = require('../../mongoose/auth/role.mongoose');
 const automapper = require('automapper-ts');
+const morphism = require('morphism').morphism;
 
 let dbKey = 'dbRole';
 let dbShortKey = 'dbShortRole';
@@ -11,6 +12,7 @@ automapper
   .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('permissions', opts => opts.mapFrom('permissions'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
 
   .forMember('__v', opts => opts.ignore())
@@ -25,8 +27,65 @@ automapper
 automapper
   .createMap(apiKey, dbKey)
   .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('permissions', opts => opts.mapFrom('permissions'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
+
+// схема db->api маппинга морфизма
+const dbApiActionSchema = {
+  id: 'id',
+  name: 'name',
+};
+
+const dbApiPermissionSchema = {
+  id: 'id',
+  'system_object.id': 'system_object.id',
+  'system_object.name': 'system_object.name',
+  actions: {
+    path: 'actions',
+    fn: (propertyValue, source) => {
+      return morphism(dbApiActionSchema, propertyValue);
+    },
+  },
+};
+
+const dbApiSchema = {
+  id: 'id',
+  name: 'name',
+  enabled: 'enabled',
+  permissions: {
+    path: 'permissions',
+    fn: (propertyValue, source) => {
+      return morphism(dbApiPermissionSchema, propertyValue);
+    },
+  },
+};
+
+// схема db->api маппинга морфизма для ответа Model.Create
+const dbApiPermissionCreateSchema = {
+  id: 'id',
+  system_object: {
+    path: 'system_object',
+    fn: (propertyValue, source) => {
+      return propertyValue.toString();
+    },
+  },
+  actions: (iteratee, source, destination) => {
+    return iteratee.actions.map(item => item.toString());
+  },
+};
+
+const dbApiCreateSchema = {
+  'role.id': 'id',
+  'role.name': 'name',
+  'role.enabled': 'enabled',
+  permissions: {
+    path: 'permissions',
+    fn: (propertyValue, source) => {
+      return morphism(dbApiPermissionCreateSchema, propertyValue);
+    },
+  },
+};
 
 module.exports = {
   // Получить список ролей.
@@ -44,11 +103,22 @@ module.exports = {
       query = mModel.find(dbSelector).select({ name: 1 });
     } else {
       query = mModel.find(dbSelector);
+      query.populate([
+        {
+          path: 'permissions.system_object',
+          select: 'name',
+        },
+        {
+          path: 'permissions.actions',
+          select: 'name',
+        },
+      ]);
     }
 
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
-        return automapper.map(dbKey, apiKey, dbResult);
+        return morphism(dbApiSchema, dbResult);
+        // return automapper.map(dbKey, apiKey, dbResult);
       } else {
         return automapper.map(dbShortKey, apiKey, dbResult);
       }
@@ -64,14 +134,77 @@ module.exports = {
     });
   },
 
-  // изменить роль
+  // Изменить роль
   async update(id, apiModel) {
     const dbModel = automapper.map(apiKey, dbKey, apiModel);
     return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec();
   },
 
-  // удалить роль
+  // Удалить роль
   async delete(id) {
     return mModel.findByIdAndDelete(id).exec();
+  },
+
+  // Получить список правил доступа роли.
+  async findPermissions(roleId) {
+    // let dbSelector = {};
+    // if (typeof filter.roleId !== 'undefined') {
+    //   dbSelector.role = filter.roleId;
+    // }
+
+    // // const retval = morphism(dbApiPermissionSchema, testData[0].permissions);
+    // // return retval;
+
+    // let query = RuleModel.find(dbSelector);
+    // query.populate([
+    //   {
+    //     path: 'role',
+    //     select: 'name',
+    //   },
+    //   {
+    //     path: 'permissions.system_object',
+    //     select: 'name',
+    //   },
+    //   {
+    //     path: 'permissions.actions',
+    //     select: 'name',
+    //   },
+    // ]);
+
+    // return query.exec().then(dbResult => {
+    //   if (dbResult.length === 0) {
+    //     return [];
+    //   } else {
+    //     const result = morphism(dbApiSchema, dbResult[0]);
+    //     return result.permissions;
+    //   }
+    // });
+
+    return mModel
+      .findById(roleId)
+      .exec()
+      .then(dbResult => {
+        return automapper.map(dbKey, apiKey, dbResult);
+      });
+  },
+
+  // Создать новые разрешения роли
+  async createPermissions(roleId, apiModel) {
+    const dbModel = apiModel.system_objectIds.map(item => ({ system_object: item, actions: apiModel.actionIds }));
+
+    return mModel
+      .findOneAndUpdate(
+        { _id: roleId, 'permissions.system_object': { $nin: dbModel.map(item => item.system_object) } },
+        { $push: { permissions: dbModel } },
+        { new: true, runValidators: true },
+      )
+      .exec()
+      .then(dbResult => {
+        if (dbResult === null) {
+          throw new Error('Такой системный объект уже имеется в разрешениях данной роли.');
+        }
+        const retval = morphism(dbApiCreateSchema, dbResult);
+        return retval;
+      });
   },
 };

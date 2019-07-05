@@ -31,17 +31,48 @@ module.exports = [
         payload: {
           name: Joi.string()
             .min(3)
-            .max(64),
-          enabled: Joi.boolean(),
+            .max(64)
+            .required(),
+          enabled: Joi.boolean().required(),
         },
       },
     },
   },
-
   {
-    path: '/api/admin/roles/{id}',
+    path: '/api/admin/roles/{id}/permissions',
     method: 'GET',
-    handler: Controller.findOne,
+    handler: Controller.findPermissions,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
+  },
+  {
+    path: '/api/admin/roles/{id}/permissions',
+    method: 'POST',
+    handler: Controller.createPermissions,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+        payload: {
+          system_objectIds: Joi.array()
+            .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+            .required(),
+          actionIds: Joi.array()
+            .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+            .required(),
+        },
+      },
+    },
   },
   {
     path: '/api/admin/roles/{id}',

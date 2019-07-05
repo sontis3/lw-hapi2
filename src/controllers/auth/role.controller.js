@@ -24,10 +24,6 @@ module.exports = {
     return result;
   },
 
-  async findOne(request, h) {
-    return Boom.notImplemented();
-  },
-
   // изменить роль
   async update(request, h) {
     const id = request.params.id;
@@ -69,6 +65,21 @@ module.exports = {
           return Boom.badRequest(err.message);
         }
       });
+    return result;
+  },
+
+  // получить список разрешений роли
+  async findPermissions(request, h) {
+    return Boom.notImplemented();
+  },
+
+  // создать разрешения роли
+  async createPermissions(request, h) {
+    const roleId = request.params.id;
+
+    const result = await Dal.createPermissions(roleId, request.payload).catch(err => {
+      return Boom.badRequest(err.message);
+    });
     return result;
   },
 };

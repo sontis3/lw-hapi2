@@ -35,12 +35,12 @@ const schemaInstance = new Schema({
   updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });
 
-schemaInstance.pre('findOneAndUpdate', function (next) {
+schemaInstance.pre('findOneAndUpdate', function(next) {
   this._update.updatedAt = Date.now();
   next();
 });
 
 module.exports = {
   RuleModel: mongoose.model('Rule', schemaInstance),
-  PermissionModel: mongoose.model('Permission', permissionSchema),
+  // PermissionModel: mongoose.model('Permission', permissionSchema),
 };

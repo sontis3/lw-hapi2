@@ -39,6 +39,16 @@ module.exports = [
     },
   },
   {
+    path: '/api/admin/roles/{id}',
+    method: 'PUT',
+    handler: Controller.update,
+  },
+  {
+    path: '/api/admin/roles/{id}',
+    method: 'DELETE',
+    handler: Controller.delete,
+  },
+  {
     path: '/api/admin/roles/{id}/permissions',
     method: 'GET',
     handler: Controller.findPermissions,
@@ -73,15 +83,5 @@ module.exports = [
         },
       },
     },
-  },
-  {
-    path: '/api/admin/roles/{id}',
-    method: 'PUT',
-    handler: Controller.update,
-  },
-  {
-    path: '/api/admin/roles/{id}',
-    method: 'DELETE',
-    handler: Controller.delete,
   },
 ];

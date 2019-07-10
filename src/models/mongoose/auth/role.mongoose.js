@@ -22,19 +22,22 @@ const permissionSchema = new Schema({
   }, // ссылка на Системный объект
   actions: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'SystemObjectAction',
-      // eslint-disable-next-line prettier/prettier
-      validate: {
-        validator: v =>
-          mongoose
-            .model('SystemObjectAction')
-            .findById(v)
-            .exec(),
-        message: props =>
-          `Попытка использовать в разрешении роли отсутствующее действие над системным объектом: ${props.value}`,
-      }, // валидация наличия в базе id Системного объекта
-    }, // ссылка на Действие над Системным объектом
+      action: {
+        type: Schema.Types.ObjectId,
+        ref: 'SystemObjectAction',
+        // eslint-disable-next-line prettier/prettier
+        validate: {
+          validator: v =>
+            mongoose
+              .model('SystemObjectAction')
+              .findById(v)
+              .exec(),
+          message: props =>
+            `Попытка использовать в разрешении роли отсутствующее действие над системным объектом: ${props.value}`,
+        }, // валидация наличия в базе id Системного объекта
+      }, // ссылка на Действие над Системным объектом
+      enabled: { required: true, type: Boolean }, // Валидность
+    },
   ],
 });
 
@@ -47,7 +50,7 @@ const schemaInstance = new Schema({
   updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });
 
-schemaInstance.pre('findOneAndUpdate', function(next) {
+schemaInstance.pre('findOneAndUpdate', function (next) {
   this._update.updatedAt = Date.now();
   next();
 });

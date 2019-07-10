@@ -34,7 +34,9 @@ automapper
 // схема db->api маппинга морфизма
 const dbApiActionSchema = {
   id: 'id',
-  name: 'name',
+  enabled: 'enabled',
+  'action.id': 'action.id',
+  'action.name': 'action.name',
 };
 
 const dbApiPermissionSchema = {
@@ -62,6 +64,17 @@ const dbApiSchema = {
 };
 
 // схема db->api маппинга морфизма для ответа Model.Create
+const dbApiActionCreateSchema = {
+  id: 'id',
+  enabled: 'enabled',
+  action: {
+    path: 'action',
+    fn: (propertyValue, source) => {
+      return propertyValue.toString();
+    },
+  },
+};
+
 const dbApiPermissionCreateSchema = {
   id: 'id',
   system_object: {
@@ -70,8 +83,11 @@ const dbApiPermissionCreateSchema = {
       return propertyValue.toString();
     },
   },
-  actions: (iteratee, source, destination) => {
-    return iteratee.actions.map(item => item.toString());
+  actions: {
+    path: 'actions',
+    fn: (propertyValue, source) => {
+      return morphism(dbApiActionCreateSchema, propertyValue);
+    },
   },
 };
 
@@ -109,7 +125,7 @@ module.exports = {
           select: 'name',
         },
         {
-          path: 'permissions.actions',
+          path: 'permissions.actions.action',
           select: 'name',
         },
       ]);
@@ -190,7 +206,10 @@ module.exports = {
 
   // Создать новые разрешения роли
   async createPermissions(roleId, apiModel) {
-    const dbModel = apiModel.system_objectIds.map(item => ({ system_object: item, actions: apiModel.actionIds }));
+    const dbModel = apiModel.system_objectIds.map(item => ({
+      system_object: item,
+      actions: apiModel.actionIds.map(a => ({ action: a, enabled: true })),
+    }));
 
     return mModel
       .findOneAndUpdate(
@@ -205,6 +224,28 @@ module.exports = {
         }
         const retval = morphism(dbApiCreateSchema, dbResult);
         return retval;
+      });
+  },
+
+  // Изменить действие разрешения роли
+  async updatePermAction(roleId, systemObjectId, apiModel) {
+    const dbModel = {
+      action: apiModel.actionId,
+      enabled: apiModel.enabled,
+    };
+
+    return mModel
+      .findOne({ _id: roleId, 'permissions.system_object': systemObjectId })
+      .exec()
+      .then(role => {
+        const permission = role.permissions.find(item => item.system_object.toString() === systemObjectId);
+        const action = permission.actions.find(item => item.action.toString() === dbModel.action);
+        if (action === undefined) {
+          permission.actions.push(dbModel);
+        } else {
+          action.set(dbModel);
+        }
+        return role.save();
       });
   },
 };

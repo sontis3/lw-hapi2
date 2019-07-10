@@ -84,4 +84,27 @@ module.exports = [
       },
     },
   },
+  {
+    path: '/api/admin/roles/{id}/permissions/{sysobjId}',
+    method: 'PUT',
+    handler: Controller.updatePermAction,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+          sysobjId: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+        payload: {
+          actionId: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+          enabled: Joi.boolean().required(),
+        },
+      },
+    },
+  },
 ];

@@ -134,7 +134,6 @@ module.exports = {
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
         return morphism(dbApiSchema, dbResult);
-        // return automapper.map(dbKey, apiKey, dbResult);
       } else {
         return automapper.map(dbShortKey, apiKey, dbResult);
       }
@@ -159,49 +158,6 @@ module.exports = {
   // Удалить роль
   async delete(id) {
     return mModel.findByIdAndDelete(id).exec();
-  },
-
-  // Получить список правил доступа роли.
-  async findPermissions(roleId) {
-    // let dbSelector = {};
-    // if (typeof filter.roleId !== 'undefined') {
-    //   dbSelector.role = filter.roleId;
-    // }
-
-    // // const retval = morphism(dbApiPermissionSchema, testData[0].permissions);
-    // // return retval;
-
-    // let query = RuleModel.find(dbSelector);
-    // query.populate([
-    //   {
-    //     path: 'role',
-    //     select: 'name',
-    //   },
-    //   {
-    //     path: 'permissions.system_object',
-    //     select: 'name',
-    //   },
-    //   {
-    //     path: 'permissions.actions',
-    //     select: 'name',
-    //   },
-    // ]);
-
-    // return query.exec().then(dbResult => {
-    //   if (dbResult.length === 0) {
-    //     return [];
-    //   } else {
-    //     const result = morphism(dbApiSchema, dbResult[0]);
-    //     return result.permissions;
-    //   }
-    // });
-
-    return mModel
-      .findById(roleId)
-      .exec()
-      .then(dbResult => {
-        return automapper.map(dbKey, apiKey, dbResult);
-      });
   },
 
   // Создать новые разрешения роли
@@ -247,5 +203,10 @@ module.exports = {
         }
         return role.save();
       });
+  },
+
+  // Удалить роль
+  async deletePermission(roleId, systemObjectId) {
+    return mModel.findByIdAndUpdate(roleId, { $pull: { permissions: { system_object: systemObjectId } } }).exec();
   },
 };

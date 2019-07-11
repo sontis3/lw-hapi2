@@ -68,11 +68,6 @@ module.exports = {
     return result;
   },
 
-  // получить список разрешений роли
-  async findPermissions(request, h) {
-    return Boom.notImplemented();
-  },
-
   // создать разрешения роли
   async createPermissions(request, h) {
     const roleId = request.params.id;
@@ -93,6 +88,28 @@ module.exports = {
     }
 
     let result = await Dal.updatePermAction(id, systemObjectId, request.payload)
+      .then(dbResult => {
+        if (dbResult === null) {
+          return Boom.notFound(`Документ с id=${id} не найден!`);
+        }
+        return dbResult;
+      })
+      .catch(err => {
+        if (err.name === 'CastError') {
+          return Boom.notFound(err.message);
+        } else {
+          return Boom.badRequest(err.message);
+        }
+      });
+    return result;
+  },
+
+  // Удалить разрешение объекта
+  async deletePermission(request, h) {
+    const id = request.params.id;
+    const systemObjectId = request.params.sysobjId;
+
+    let result = await Dal.deletePermission(id, systemObjectId)
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Документ с id=${id} не найден!`);

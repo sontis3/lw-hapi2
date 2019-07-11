@@ -50,20 +50,6 @@ module.exports = [
   },
   {
     path: '/api/admin/roles/{id}/permissions',
-    method: 'GET',
-    handler: Controller.findPermissions,
-    options: {
-      validate: {
-        params: {
-          id: Joi.string()
-            .regex(/^[0-9a-fA-F]{24}$/)
-            .required(),
-        },
-      },
-    },
-  },
-  {
-    path: '/api/admin/roles/{id}/permissions',
     method: 'POST',
     handler: Controller.createPermissions,
     options: {
@@ -103,6 +89,23 @@ module.exports = [
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
           enabled: Joi.boolean().required(),
+        },
+      },
+    },
+  },
+  {
+    path: '/api/admin/roles/{id}/permissions/{sysobjId}',
+    method: 'DELETE',
+    handler: Controller.deletePermission,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+          sysobjId: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
         },
       },
     },

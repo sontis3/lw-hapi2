@@ -32,6 +32,9 @@ module.exports = [
           name: Joi.string()
             .min(3)
             .max(64),
+          tag: Joi.string()
+            .min(3)
+            .max(64),
           enabled: Joi.boolean(),
         },
       },

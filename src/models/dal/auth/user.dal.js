@@ -16,6 +16,8 @@ automapper
   .forMember('password', opts => opts.mapFrom('password'))
   .forMember('role.id', opts => opts.mapFrom('role._id'))
   .forMember('role.name', opts => opts.mapFrom('role.name'))
+  .forMember('createdAt', opts => opts.mapFrom('createdAt'))
+  .forMember('updatedAt', opts => opts.mapFrom('updatedAt'))
 
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
@@ -31,7 +33,7 @@ automapper
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('email', opts => opts.mapFrom('email'))
-  .forMember('password', opts => opts.mapFrom('password'))
+  // .forMember('password', opts => opts.mapFrom('password'))
   .forMember('role', opts => opts.mapFrom('roleId'))
   .ignoreAllNonExisting();
 
@@ -94,7 +96,7 @@ module.exports = {
   // изменить пользователя
   async update(id, apiModel) {
     const dbModel = automapper.map(apiKey, dbKey, apiModel);
-    return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec(); // runValidators для проверки id country
+    return mModel.findByIdAndUpdate(id, dbModel, { new: true, runValidators: true }).exec(); // runValidators для проверки id role
   },
 
   // удалить пользователя

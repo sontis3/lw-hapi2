@@ -41,6 +41,7 @@ module.exports = {
     result = await Dal.create(user).catch(err => {
       return Boom.badRequest(err.message);
     });
+    result.password = null; // нельзя возвращать хеш пароля
     return result;
   },
 

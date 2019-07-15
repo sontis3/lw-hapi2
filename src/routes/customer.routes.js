@@ -45,15 +45,42 @@ module.exports = [
     path: '/api/dir/customers/{id}',
     method: 'GET',
     handler: Controller.findOne,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
   },
   {
     path: '/api/dir/customers/{id}',
     method: 'PUT',
     handler: Controller.update,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
   },
   {
     path: '/api/dir/customers/{id}',
     method: 'DELETE',
     handler: Controller.delete,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
   },
 ];

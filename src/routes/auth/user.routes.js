@@ -46,4 +46,18 @@ module.exports = [
       },
     },
   },
+  {
+    path: '/api/admin/users/{id}',
+    method: 'DELETE',
+    handler: Controller.delete,
+    options: {
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
+  },
 ];

@@ -13,7 +13,7 @@ automapper
   .forMember('name', opts => opts.mapFrom('name'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .forMember('email', opts => opts.mapFrom('email'))
-  .forMember('password', opts => opts.mapFrom('password'))
+  // .forMember('password', opts => opts.mapFrom('password'))
   .forMember('role.id', opts => opts.mapFrom('role._id'))
   .forMember('role.name', opts => opts.mapFrom('role.name'))
   .forMember('createdAt', opts => opts.mapFrom('createdAt'))
@@ -37,6 +37,31 @@ automapper
   .forMember('role', opts => opts.mapFrom('roleId'))
   .ignoreAllNonExisting();
 
+// маппинги для аутентификации
+automapper
+  .createMap('dbUserAuth', 'apiUserAuth')
+  .forMember('id', opts => opts.sourceObject['_id'].subProp)
+  .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('enabled', opts => opts.mapFrom('enabled'))
+  .forMember('email', opts => opts.mapFrom('email'))
+  .forMember('password', opts => opts.mapFrom('password'))
+  .forMember('role.id', opts => opts.mapFrom('role._id'))
+  .forMember('role.name', opts => opts.mapFrom('role.name'))
+  .forMember('createdAt', opts => opts.mapFrom('createdAt'))
+  .forMember('updatedAt', opts => opts.mapFrom('updatedAt'))
+
+  .forMember('__v', opts => opts.ignore())
+  .ignoreAllNonExisting();
+
+automapper
+  .createMap('apiUserAuth', 'dbUserAuth')
+  .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('enabled', opts => opts.mapFrom('enabled'))
+  .forMember('email', opts => opts.mapFrom('email'))
+  .forMember('password', opts => opts.mapFrom('password'))
+  .forMember('role', opts => opts.mapFrom('roleId'))
+  .ignoreAllNonExisting();
+
 module.exports = {
   // Получить список пользователей.
   // description: По умолчанию все пользователи.
@@ -55,6 +80,7 @@ module.exports = {
       query = mModel.find(dbSelector);
     }
 
+    query.populate('role', 'name');
     return query.exec().then(dbResult => {
       if (filter.short !== true) {
         return automapper.map(dbKey, apiKey, dbResult);
@@ -70,7 +96,7 @@ module.exports = {
       .findOne({ name: userName })
       .exec()
       .then(dbResult => {
-        return automapper.map(dbKey, apiKey, dbResult);
+        return automapper.map('dbUserAuth', 'apiUserAuth', dbResult);
       });
   },
 
@@ -86,10 +112,10 @@ module.exports = {
 
   // Создать нового пользователя
   async create(apiModel) {
-    const dbModel = automapper.map(apiKey, dbKey, apiModel);
+    const dbModel = automapper.map('apiUserAuth', 'dbUserAuth', apiModel);
 
     return mModel.create(dbModel).then(dbResult => {
-      return automapper.map(dbKey, apiKey, dbResult);
+      return automapper.map('dbUserAuth', 'apiUserAuth', dbResult);
     });
   },
 

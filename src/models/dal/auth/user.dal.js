@@ -1,6 +1,7 @@
 'use strict';
 
 const mModel = require('../../mongoose/auth/user.mongoose');
+const roleModel = require('../../mongoose/auth/role.mongoose');
 const automapper = require('automapper-ts');
 
 let dbKey = 'dbUser';
@@ -111,12 +112,28 @@ module.exports = {
   },
 
   // Создать нового пользователя
+  // пользователю назначается фиктивная роль. Если такой роли еще нет, то она создаётся
   async create(apiModel) {
     const dbModel = automapper.map('apiUserAuth', 'dbUserAuth', apiModel);
 
-    return mModel.create(dbModel).then(dbResult => {
-      return automapper.map('dbUserAuth', 'apiUserAuth', dbResult);
-    });
+    return roleModel
+      .findOne({ name: 'Dummy' })
+      .exec()
+      .then(dbResult => {
+        if (dbResult === null) {
+          return roleModel.create({ name: 'Dummy', enabled: true });
+        }
+        return dbResult;
+      })
+      .then(dummyRole => {
+        dbModel.role = dummyRole.id;
+        return mModel.create(dbModel).then(dbResult => {
+          return automapper.map('dbUserAuth', 'apiUserAuth', dbResult);
+        });
+      });
+    // return mModel.create(dbModel).then(dbResult => {
+    //   return automapper.map('dbUserAuth', 'apiUserAuth', dbResult);
+    // });
   },
 
   // изменить пользователя

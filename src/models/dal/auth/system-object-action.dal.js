@@ -11,6 +11,7 @@ automapper
   .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('tag', opts => opts.mapFrom('tag'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
 
   .forMember('__v', opts => opts.ignore())
@@ -25,6 +26,7 @@ automapper
 automapper
   .createMap(apiKey, dbKey)
   .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('tag', opts => opts.mapFrom('tag'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
 

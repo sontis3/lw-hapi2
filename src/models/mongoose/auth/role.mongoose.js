@@ -44,6 +44,7 @@ const permissionSchema = new Schema({
 // Роль
 const schemaInstance = new Schema({
   name: { required: true, type: String, unique: true }, // Наименование
+  tag: { required: true, type: String, unique: true }, // Тэг
   permissions: [permissionSchema], // разрешения
   enabled: { required: true, type: Boolean }, // Валидность
   createdAt: { required: true, type: Date, default: Date.now }, // дата создания документа

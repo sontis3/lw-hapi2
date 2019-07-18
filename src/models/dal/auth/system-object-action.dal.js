@@ -30,6 +30,16 @@ automapper
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
 
+// исходные данные
+const dsTemplate = [
+  { _id: '5d0a155e3c74d8252884b8a6', name: 'Читать', tag: 'read', enabled: true },
+  { _id: '5d1240526e5a7a3360afd767', name: 'Создавать', tag: 'create', enabled: true },
+  { _id: '5d1240696e5a7a3360afd768', name: 'Изменять', tag: 'update', enabled: true },
+  { _id: '5d1240736e5a7a3360afd769', name: 'Удалять', tag: 'delete', enabled: true },
+  { _id: '5d2dae33d87eba6654d01ee6', name: 'Обрабатывать', tag: 'treat', enabled: true },
+  // { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
+];
+
 module.exports = {
   // Получить список действий с системными объектами.
   // description: По умолчанию все действия с системными объектами.
@@ -75,5 +85,17 @@ module.exports = {
   // удалить действие
   async delete(id) {
     return mModel.findByIdAndDelete(id).exec();
+  },
+
+  // удалить коллекцию действия над системными объектами
+  async dropCollection() {
+    return mModel.collection.drop();
+  },
+
+  // восстановить коллекцию действия над системными объектами
+  async restoreCollection() {
+    return mModel.create(dsTemplate).then(dbResult => {
+      return automapper.map(dbKey, apiKey, dbResult);
+    });
   },
 };

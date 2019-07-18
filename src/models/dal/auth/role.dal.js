@@ -103,6 +103,16 @@ const dbApiCreateSchema = {
   },
 };
 
+// исходные данные
+const dsTemplate = [
+  { _id: '5d305d3fba232a93901b75f2', name: 'Администратор', tag: 'Admin', enabled: true },
+  { _id: '5d305d46ba232a93901b75f3', name: 'Пользователь', tag: 'User', enabled: true },
+  // { _id: '5d2f4958973a9c77b42e3a49', name: 'Роль', tag: 'role', enabled: true },
+  // { _id: '5d2f4958973a9c77b42e3a48', name: 'Пользователь', tag: 'user', enabled: true },
+  // { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },
+  // { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
+];
+
 module.exports = {
   // Получить список ролей.
   // description: По умолчанию все роли.
@@ -208,5 +218,17 @@ module.exports = {
   // Удалить роль
   async deletePermission(roleId, systemObjectId) {
     return mModel.findByIdAndUpdate(roleId, { $pull: { permissions: { system_object: systemObjectId } } }).exec();
+  },
+
+  // удалить коллекцию роль
+  async dropCollection() {
+    return mModel.collection.drop();
+  },
+
+  // восстановить коллекцию роль
+  async restoreCollection() {
+    return mModel.create(dsTemplate).then(dbResult => {
+      return automapper.map(dbKey, apiKey, dbResult);
+    });
   },
 };

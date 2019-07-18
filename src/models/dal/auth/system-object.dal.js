@@ -30,6 +30,16 @@ automapper
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
 
+// исходные данные
+const dsTemplate = [
+  { _id: '5d2f4a64caf08965a8f17bf1', name: 'Системный объект', tag: 'systemObject', enabled: true },
+  { _id: '5d2f4958973a9c77b42e3a4a', name: 'Действие над системным объектом', tag: 'systemObjectAction', enabled: true },
+  { _id: '5d2f4958973a9c77b42e3a49', name: 'Роль', tag: 'role', enabled: true },
+  { _id: '5d2f4958973a9c77b42e3a48', name: 'Пользователь', tag: 'user', enabled: true },
+  { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },
+  { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
+];
+
 module.exports = {
   // Получить список системных объектов.
   // description: По умолчанию все системные объекты.
@@ -75,5 +85,17 @@ module.exports = {
   // удалить системный объект
   async delete(id) {
     return mModel.findByIdAndDelete(id).exec();
+  },
+
+  // удалить коллекцию системный объект
+  async dropCollection() {
+    return mModel.collection.drop();
+  },
+
+  // восстановить коллекцию системный объект
+  async restoreCollection() {
+    return mModel.create(dsTemplate).then(dbResult => {
+      return automapper.map(dbKey, apiKey, dbResult);
+    });
   },
 };

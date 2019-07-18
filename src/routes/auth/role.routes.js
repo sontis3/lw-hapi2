@@ -33,6 +33,10 @@ module.exports = [
             .min(3)
             .max(64)
             .required(),
+          tag: Joi.string()
+            .min(3)
+            .max(64)
+            .required(),
           enabled: Joi.boolean().required(),
         },
       },

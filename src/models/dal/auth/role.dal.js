@@ -12,6 +12,7 @@ automapper
   .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
   .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('tag', opts => opts.mapFrom('tag'))
   .forMember('permissions', opts => opts.mapFrom('permissions'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
 
@@ -27,6 +28,7 @@ automapper
 automapper
   .createMap(apiKey, dbKey)
   .forMember('name', opts => opts.mapFrom('name'))
+  .forMember('tag', opts => opts.mapFrom('tag'))
   .forMember('permissions', opts => opts.mapFrom('permissions'))
   .forMember('enabled', opts => opts.mapFrom('enabled'))
   .ignoreAllNonExisting();
@@ -105,12 +107,119 @@ const dbApiCreateSchema = {
 
 // исходные данные
 const dsTemplate = [
-  { _id: '5d305d3fba232a93901b75f2', name: 'Администратор', tag: 'Admin', enabled: true },
-  { _id: '5d305d46ba232a93901b75f3', name: 'Пользователь', tag: 'User', enabled: true },
-  // { _id: '5d2f4958973a9c77b42e3a49', name: 'Роль', tag: 'role', enabled: true },
-  // { _id: '5d2f4958973a9c77b42e3a48', name: 'Пользователь', tag: 'user', enabled: true },
-  // { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },
-  // { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
+  {
+    _id: '5d305d3fba232a93901b75f2',
+    name: 'Администратор',
+    tag: 'admin',
+    permissions: [
+      {
+        _id: '5d305d69ba232a93901b7612',
+        system_object: '5d2f4a64caf08965a8f17bf1',
+        actions: [
+          { _id: '5d305d69ba232a93901b7617', action: '5d0a155e3c74d8252884b8a6', enabled: true },
+          { _id: '5d305d69ba232a93901b7616', action: '5d1240526e5a7a3360afd767', enabled: true },
+          { _id: '5d305d69ba232a93901b7615', action: '5d1240736e5a7a3360afd769', enabled: true },
+          { _id: '5d305d69ba232a93901b7614', action: '5d1240696e5a7a3360afd768', enabled: true },
+          { _id: '5d305d69ba232a93901b7613', action: '5d2dae33d87eba6654d01ee6', enabled: true },
+        ],
+      },
+      {
+        _id: '5d305d69ba232a93901b760c',
+        system_object: '5d2f4958973a9c77b42e3a49',
+        actions: [
+          { _id: '5d305d69ba232a93901b7611', action: '5d0a155e3c74d8252884b8a6', enabled: true },
+          { _id: '5d305d69ba232a93901b7610', action: '5d1240526e5a7a3360afd767', enabled: true },
+          { _id: '5d305d69ba232a93901b760f', action: '5d1240736e5a7a3360afd769', enabled: true },
+          { _id: '5d305d69ba232a93901b760e', action: '5d1240696e5a7a3360afd768', enabled: true },
+          { _id: '5d305d69ba232a93901b760d', action: '5d2dae33d87eba6654d01ee6', enabled: true },
+        ],
+      },
+      {
+        _id: '5d305d69ba232a93901b7606',
+        system_object: '5d2f4958973a9c77b42e3a48',
+        actions: [
+          { _id: '5d305d69ba232a93901b760b', action: '5d0a155e3c74d8252884b8a6', enabled: true },
+          { _id: '5d305d69ba232a93901b760a', action: '5d1240526e5a7a3360afd767', enabled: true },
+          { _id: '5d305d69ba232a93901b7609', action: '5d1240736e5a7a3360afd769', enabled: true },
+          { _id: '5d305d69ba232a93901b7608', action: '5d1240696e5a7a3360afd768', enabled: true },
+          { _id: '5d305d69ba232a93901b7607', action: '5d2dae33d87eba6654d01ee6', enabled: true },
+        ],
+      },
+      {
+        _id: '5d305d69ba232a93901b7600',
+        system_object: '5d2f4958973a9c77b42e3a4a',
+        actions: [
+          { _id: '5d305d69ba232a93901b7605', action: '5d0a155e3c74d8252884b8a6', enabled: true },
+          { _id: '5d305d69ba232a93901b7604', action: '5d1240526e5a7a3360afd767', enabled: true },
+          { _id: '5d305d69ba232a93901b7603', action: '5d1240736e5a7a3360afd769', enabled: true },
+          { _id: '5d305d69ba232a93901b7602', action: '5d1240696e5a7a3360afd768', enabled: true },
+          { _id: '5d305d69ba232a93901b7601', action: '5d2dae33d87eba6654d01ee6', enabled: true },
+        ],
+      },
+      {
+        _id: '5d305d69ba232a93901b75fa',
+        system_object: '5d3052cb118ff05d802da1c7',
+        actions: [
+          { _id: '5d305d69ba232a93901b75ff', action: '5d0a155e3c74d8252884b8a6', enabled: true },
+          { _id: '5d305d69ba232a93901b75fe', action: '5d1240526e5a7a3360afd767', enabled: true },
+          { _id: '5d305d69ba232a93901b75fd', action: '5d1240736e5a7a3360afd769', enabled: true },
+          { _id: '5d305d69ba232a93901b75fc', action: '5d1240696e5a7a3360afd768', enabled: true },
+          { _id: '5d305d69ba232a93901b75fb', action: '5d2dae33d87eba6654d01ee6', enabled: true },
+        ],
+      },
+      {
+        _id: '5d305d69ba232a93901b75f4',
+        system_object: '5d3052e8118ff05d802da1c8',
+        actions: [
+          { _id: '5d305d69ba232a93901b75f9', action: '5d0a155e3c74d8252884b8a6', enabled: true },
+          { _id: '5d305d69ba232a93901b75f8', action: '5d1240526e5a7a3360afd767', enabled: true },
+          { _id: '5d305d69ba232a93901b75f7', action: '5d1240736e5a7a3360afd769', enabled: true },
+          { _id: '5d305d69ba232a93901b75f6', action: '5d1240696e5a7a3360afd768', enabled: true },
+          { _id: '5d305d69ba232a93901b75f5', action: '5d2dae33d87eba6654d01ee6', enabled: true },
+        ],
+      },
+    ],
+    enabled: true,
+  },
+
+  {
+    _id: '5d305d46ba232a93901b75f3',
+    name: 'Пользователь',
+    tag: 'user',
+    permissions: [
+      {
+        _id: '5d305d8dba232a93901b7622',
+        system_object: '5d2f4a64caf08965a8f17bf1',
+        actions: [{ _id: '5d305d8dba232a93901b7623', action: '5d0a155e3c74d8252884b8a6', enabled: true }],
+      },
+      {
+        _id: '5d305d8dba232a93901b7620',
+        system_object: '5d2f4958973a9c77b42e3a49',
+        actions: [{ _id: '5d305d8dba232a93901b7621', action: '5d0a155e3c74d8252884b8a6', enabled: true }],
+      },
+      {
+        _id: '5d305d8dba232a93901b761e',
+        system_object: '5d2f4958973a9c77b42e3a48',
+        actions: [{ _id: '5d305d8dba232a93901b761f', action: '5d0a155e3c74d8252884b8a6', enabled: true }],
+      },
+      {
+        _id: '5d305d8dba232a93901b761c',
+        system_object: '5d2f4958973a9c77b42e3a4a',
+        actions: [{ _id: '5d305d8dba232a93901b761d', action: '5d0a155e3c74d8252884b8a6', enabled: true }],
+      },
+      {
+        _id: '5d305d8dba232a93901b761a',
+        system_object: '5d3052cb118ff05d802da1c7',
+        actions: [{ _id: '5d305d8dba232a93901b761b', action: '5d0a155e3c74d8252884b8a6', enabled: true }],
+      },
+      {
+        _id: '5d305d8dba232a93901b7618',
+        system_object: '5d3052e8118ff05d802da1c8',
+        actions: [{ _id: '5d305d8dba232a93901b7619', action: '5d0a155e3c74d8252884b8a6', enabled: true }],
+      },
+    ],
+    enabled: true,
+  },
 ];
 
 module.exports = {

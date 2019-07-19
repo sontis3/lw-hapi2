@@ -27,12 +27,25 @@ const CaslRules2 = [
 
 // преобразование разрешений db->Casl
 function PermissionsToRules(permissions) {
-  const rules = permissions.map(item => ({
-    subject: item.system_object.tag,
-    // actions: item.actions.map(act => {
-    //   act.enabled
-    // }),
-  }));
+  const rules = permissions.map(item => {
+    const isGranted = item.actions.reduce((res, currentItem) => res || currentItem.granted, false);
+    if (isGranted) {
+      return {
+        subject: new Array(item.system_object.tag),
+        actions: item.actions.map(a => {
+          if (a.granted) {
+            return a.action.tag;
+          }
+        }),
+      };
+    }
+  });
+  //   ({
+  //   subject: item.system_object.tag,
+  //   // actions: item.actions.map(act => {
+  //   //   act.enabled
+  //   // }),
+  // }));
   return rules;
 }
 

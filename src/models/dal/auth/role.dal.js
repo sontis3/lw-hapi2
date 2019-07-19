@@ -220,6 +220,13 @@ const dsTemplate = [
     ],
     enabled: true,
   },
+  {
+    _id: '5d319c0af0d44e7fbc2d4225',
+    name: 'Новый пользователь',
+    tag: 'newUser',
+    permissions: [],
+    enabled: true,
+  },
 ];
 
 module.exports = {

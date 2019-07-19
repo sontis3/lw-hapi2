@@ -56,23 +56,23 @@ module.exports = {
     const aaa = new Ability(CaslRules1);
 
     const { name, password } = request.payload;
-    let result = await Dal.findByName(name).catch(err => {
+    const user = await Dal.findByName(name).catch(err => {
       return Boom.badRequest(err.message);
     });
     // проверка что нашли пользователя
-    if (Boom.isBoom(result)) {
-      return result;
-    } else if (!result) {
+    if (Boom.isBoom(user)) {
+      return user;
+    } else if (!user) {
       return Boom.badRequest('Неверные логин или пароль.');
-    } else if (!result.enabled) {
+    } else if (!user.enabled) {
       return Boom.badRequest('Пользователь деактивирован. Обратитесь к администратору системы.');
     }
 
-    const credential = { id: result.id, rules: CaslRules2 };
     // проверка пароля
-    result = await Bcrypt.compare(password, result.password)
+    const result = await Bcrypt.compare(password, user.password)
       .then(res => {
-        if (res) {
+        if (res) {    // пароль верен
+          const credential = { id: user.id, rules: CaslRules2 };
           // const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256', expiresIn: '1h' });
           const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256' });
           return { name: name, access_token: token, rules: CaslRules2 };

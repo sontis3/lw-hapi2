@@ -95,6 +95,7 @@ module.exports = {
   async findByName(userName) {
     return mModel
       .findOne({ name: userName })
+      .populate('role', 'name')
       .exec()
       .then(dbResult => {
         return automapper.map('dbUserAuth', 'apiUserAuth', dbResult);
@@ -117,11 +118,17 @@ module.exports = {
     const dbModel = automapper.map('apiUserAuth', 'dbUserAuth', apiModel);
 
     return roleModel
-      .findOne({ name: 'Dummy' })
+      .findOne({ tag: 'newUser' })
       .exec()
       .then(dbResult => {
         if (dbResult === null) {
-          return roleModel.create({ name: 'Dummy', enabled: true });
+          return roleModel.create({
+            _id: '5d319c0af0d44e7fbc2d4225',
+            name: 'Новый пользователь',
+            tag: 'newUser',
+            permissions: [],
+            enabled: true,
+          });
         }
         return dbResult;
       })

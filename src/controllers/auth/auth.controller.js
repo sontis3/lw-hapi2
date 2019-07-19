@@ -1,7 +1,8 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../../models/dal/auth/user.dal');
+const dalUser = require('../../models/dal/auth/user.dal');
+const dalRole = require('../../models/dal/auth/role.dal');
 const Bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // eslint-disable-next-line no-unused-vars
@@ -24,6 +25,17 @@ const CaslRules2 = [
   },
 ];
 
+// преобразование разрешений db->Casl
+function PermissionsToRules(permissions) {
+  const rules = permissions.map(item => ({
+    subject: item.system_object.tag,
+    // actions: item.actions.map(act => {
+    //   act.enabled
+    // }),
+  }));
+  return rules;
+}
+
 module.exports = {
   // Создать нового пользователя
   async register(request, h) {
@@ -38,7 +50,7 @@ module.exports = {
     }
 
     user.password = result;
-    result = await Dal.create(user).catch(err => {
+    result = await dalUser.create(user).catch(err => {
       return Boom.badRequest(err.message);
     });
     result.password = null; // нельзя возвращать хеш пароля
@@ -56,7 +68,7 @@ module.exports = {
     const aaa = new Ability(CaslRules1);
 
     const { name, password } = request.payload;
-    const user = await Dal.findByName(name).catch(err => {
+    const user = await dalUser.findByName(name).catch(err => {
       return Boom.badRequest(err.message);
     });
     // проверка что нашли пользователя
@@ -70,8 +82,19 @@ module.exports = {
 
     // проверка пароля
     const result = await Bcrypt.compare(password, user.password)
-      .then(res => {
+      .then(async res => {
         if (res) {    // пароль верен
+          const role = await dalRole.findById(user.role.id.toString()).catch(err => {
+            return Boom.badRequest(err.message);
+          });
+
+          if (Boom.isBoom(role)) {
+            return role;
+          } else if (!role) {
+            return Boom.badRequest('Роль пользователя не найдена.');
+          }
+          const rules = PermissionsToRules(role.permissions);
+          console.log(rules);
           const credential = { id: user.id, rules: CaslRules2 };
           // const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256', expiresIn: '1h' });
           const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256' });

@@ -92,7 +92,7 @@ module.exports = [
           actionId: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
-          enabled: Joi.boolean().required(),
+          granted: Joi.boolean().required(),
         },
       },
     },

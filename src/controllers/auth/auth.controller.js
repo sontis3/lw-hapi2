@@ -8,22 +8,22 @@ const jwt = require('jsonwebtoken');
 // eslint-disable-next-line no-unused-vars
 const { AbilityBuilder, Ability } = require('@casl/ability');
 
-const CaslRules1 = [
-  {
-    actions: ['read'],
-    subject: ['all'],
-  },
-];
-const CaslRules2 = [
-  {
-    actions: ['read'],
-    subject: ['all'],
-  },
-  {
-    actions: ['read', 'delete'],
-    subject: ['Country'],
-  },
-];
+// const CaslRules1 = [
+//   {
+//     actions: ['read'],
+//     subject: ['all'],
+//   },
+// ];
+// const CaslRules2 = [
+//   {
+//     actions: ['read'],
+//     subject: ['all'],
+//   },
+//   {
+//     actions: ['read', 'delete'],
+//     subject: ['Country'],
+//   },
+// ];
 
 // преобразование разрешений db->Casl
 function PermissionsToRules(permissions) {
@@ -40,12 +40,6 @@ function PermissionsToRules(permissions) {
       };
     }
   });
-  //   ({
-  //   subject: item.system_object.tag,
-  //   // actions: item.actions.map(act => {
-  //   //   act.enabled
-  //   // }),
-  // }));
   return rules;
 }
 
@@ -78,7 +72,7 @@ module.exports = {
     can('manage', 'Post', { author: 'me' });
     cannot('delete', 'Post');
     // eslint-disable-next-line no-unused-vars
-    const aaa = new Ability(CaslRules1);
+    // const aaa = new Ability(CaslRules1);
 
     const { name, password } = request.payload;
     const user = await dalUser.findByName(name).catch(err => {
@@ -106,12 +100,11 @@ module.exports = {
           } else if (!role) {
             return Boom.badRequest('Роль пользователя не найдена.');
           }
-          const rules = PermissionsToRules(role.permissions);
-          console.log(rules);
-          const credential = { id: user.id, rules: CaslRules2 };
+          const userRules = PermissionsToRules(role.permissions);
+          const credential = { id: user.id, rules: userRules };
           // const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256', expiresIn: '1h' });
           const token = jwt.sign(credential, this.jwt_key, { algorithm: 'HS256' });
-          return { name: name, access_token: token, rules: CaslRules2 };
+          return { name: name, access_token: token, rules: userRules };
         } else {
           return Boom.badRequest('Неверные логин или пароль.');
         }

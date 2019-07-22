@@ -310,7 +310,7 @@ module.exports = {
   async createPermissions(roleId, apiModel) {
     const dbModel = apiModel.system_objectIds.map(item => ({
       system_object: item,
-      actions: apiModel.actionIds.map(a => ({ action: a, enabled: true })),
+      actions: apiModel.actionIds.map(a => ({ action: a, granted: true })),
     }));
 
     return mModel

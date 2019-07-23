@@ -2,6 +2,7 @@
 
 const Controller = require('../../controllers/auth/role.controller');
 const Joi = require('joi');
+const helpers = require('../../controllers/helpers');
 
 module.exports = [
   {
@@ -9,6 +10,7 @@ module.exports = [
     method: 'GET',
     handler: Controller.find,
     options: {
+      pre: [{ method: helpers.checkAbility('read', 'role') }],
       validate: {
         query: {
           enabled: Joi.boolean(),
@@ -27,6 +29,7 @@ module.exports = [
     method: 'POST',
     handler: Controller.create,
     options: {
+      pre: [{ method: helpers.checkAbility('create', 'role') }],
       validate: {
         payload: {
           name: Joi.string()
@@ -46,11 +49,42 @@ module.exports = [
     path: '/api/admin/roles/{id}',
     method: 'PUT',
     handler: Controller.update,
+    options: {
+      pre: [{ method: helpers.checkAbility('update', 'role') }],
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+        payload: {
+          name: Joi.string()
+            .min(3)
+            .max(64)
+            .required(),
+          tag: Joi.string()
+            .min(3)
+            .max(64)
+            .required(),
+          enabled: Joi.boolean().required(),
+        },
+      },
+    },
   },
   {
     path: '/api/admin/roles/{id}',
     method: 'DELETE',
     handler: Controller.delete,
+    options: {
+      pre: [{ method: helpers.checkAbility('delete', 'role') }],
+      validate: {
+        params: {
+          id: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
   },
   {
     path: '/api/admin/roles/{id}/permissions',

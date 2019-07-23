@@ -2,9 +2,6 @@
 
 const Boom = require('boom');
 const Dal = require('../../models/dal/auth/role.dal');
-// const { Ability } = require('@casl/ability');
-const helpers = require('../helpers');
-const objectName = 'role';
 
 module.exports = {
   // Получить список ролей.
@@ -12,18 +9,6 @@ module.exports = {
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(request, h) {
-    // проверка разрешений роли
-    const checkResult = helpers.checkAbility(request.auth.credentials.rules, 'read', objectName);
-    if (Boom.isBoom(checkResult)) {
-      return checkResult;
-    }
-
-    // const action = 'read';
-    // const ability = new Ability(request.auth.credentials.rules);
-    // if (ability.cannot(action, objectName)) {
-    //   return Boom.forbidden(`Запрещено действие <${action}> для обекта [${objectName}]!`);
-    // }
-
     const filter = request.query;
     const result = await Dal.find(filter).catch(err => {
       return Boom.badRequest(err.message);
@@ -33,12 +18,6 @@ module.exports = {
 
   // Создать новую роль
   async create(request, h) {
-    // проверка разрешений роли
-    const checkResult = helpers.checkAbility(request.auth.credentials.rules, 'create', objectName);
-    if (Boom.isBoom(checkResult)) {
-      return checkResult;
-    }
-
     const result = await Dal.create(request.payload).catch(err => {
       return Boom.badRequest(err.message);
     });
@@ -47,12 +26,6 @@ module.exports = {
 
   // изменить роль
   async update(request, h) {
-    // проверка разрешений роли
-    const checkResult = helpers.checkAbility(request.auth.credentials.rules, 'update', objectName);
-    if (Boom.isBoom(checkResult)) {
-      return checkResult;
-    }
-
     const id = request.params.id;
     if (!request.payload) {
       return Boom.badData('No request payload data');
@@ -77,12 +50,6 @@ module.exports = {
 
   // Удалить роль
   async delete(request, h) {
-    // проверка разрешений роли
-    const checkResult = helpers.checkAbility(request.auth.credentials.rules, 'delete', objectName);
-    if (Boom.isBoom(checkResult)) {
-      return checkResult;
-    }
-
     const id = request.params.id;
     let result = await Dal.delete(id)
       .then(dbResult => {

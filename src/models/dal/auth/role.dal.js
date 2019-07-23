@@ -108,6 +108,25 @@ const dbApiCreateSchema = {
 // исходные данные
 const dsTemplate = [
   {
+    _id: '5d3720b0cf428ca908d02ba7',
+    name: 'Администратор Главный',
+    tag: 'adminMain',
+    permissions: [
+      {
+        _id: '5d3720c5cf428ca908d02ba8',
+        system_object: '5d371e097583e0aea0ec58dd',
+        actions: [
+          { _id: '5d3720c5cf428ca908d02bad', action: '5d0a155e3c74d8252884b8a6', granted: true },
+          { _id: '5d3720c5cf428ca908d02bac', action: '5d1240526e5a7a3360afd767', granted: true },
+          { _id: '5d3720c5cf428ca908d02bab', action: '5d1240736e5a7a3360afd769', granted: true },
+          { _id: '5d3720c5cf428ca908d02baa', action: '5d1240696e5a7a3360afd768', granted: true },
+          { _id: '5d3720c5cf428ca908d02ba9', action: '5d2dae33d87eba6654d01ee6', granted: true },
+        ],
+      },
+    ],
+    enabled: true,
+  },
+  {
     _id: '5d305d3fba232a93901b75f2',
     name: 'Администратор',
     tag: 'admin',

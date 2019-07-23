@@ -32,8 +32,17 @@ automapper
 
 // исходные данные
 const dsTemplate = [
+  { _id: '5d371e097583e0aea0ec58dd', name: 'Все', tag: 'all', enabled: true },
+  { _id: '5d371e4a7583e0aea0ec58de', name: 'Все Администрирование', tag: 'allAdministration', enabled: true },
+  { _id: '5d371ea57583e0aea0ec58df', name: 'Все Справочники', tag: 'allDictionaries', enabled: true },
+
   { _id: '5d2f4a64caf08965a8f17bf1', name: 'Системный объект', tag: 'systemObject', enabled: true },
-  { _id: '5d2f4958973a9c77b42e3a4a', name: 'Действие над системным объектом', tag: 'systemObjectAction', enabled: true },
+  {
+    _id: '5d2f4958973a9c77b42e3a4a',
+    name: 'Действие над системным объектом',
+    tag: 'systemObjectAction',
+    enabled: true,
+  },
   { _id: '5d2f4958973a9c77b42e3a49', name: 'Роль', tag: 'role', enabled: true },
   { _id: '5d2f4958973a9c77b42e3a48', name: 'Пользователь', tag: 'user', enabled: true },
   { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },

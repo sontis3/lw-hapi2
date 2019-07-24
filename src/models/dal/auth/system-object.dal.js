@@ -35,6 +35,7 @@ const dsTemplate = [
   { _id: '5d371e097583e0aea0ec58dd', name: 'Все', tag: 'all', enabled: true },
   { _id: '5d371e4a7583e0aea0ec58de', name: 'Все Администрирование', tag: 'allAdministration', enabled: true },
   { _id: '5d371ea57583e0aea0ec58df', name: 'Все Справочники', tag: 'allDictionaries', enabled: true },
+  { _id: '5d38297925dd557bb0e9c6ce', name: 'Все Реестры', tag: 'allCatalogs', enabled: true },
 
   { _id: '5d2f4a64caf08965a8f17bf1', name: 'Системный объект', tag: 'systemObject', enabled: true },
   {
@@ -44,6 +45,7 @@ const dsTemplate = [
     enabled: true,
   },
   { _id: '5d2f4958973a9c77b42e3a49', name: 'Роль', tag: 'role', enabled: true },
+  { _id: '5d3830bf53b28626dc101600', name: 'Роль.Разрешение', tag: 'role.permission', enabled: true },
   { _id: '5d2f4958973a9c77b42e3a48', name: 'Пользователь', tag: 'user', enabled: true },
   { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },
   { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },

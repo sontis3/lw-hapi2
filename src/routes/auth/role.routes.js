@@ -4,6 +4,7 @@ const Controller = require('../../controllers/auth/role.controller');
 const Joi = require('joi');
 const helpers = require('../../controllers/helpers');
 const sysObjects = ['all', 'allAdministration', 'role'];
+const sysObjectsPermissions = ['all', 'allAdministration', 'role.permission'];
 
 module.exports = [
   {
@@ -92,6 +93,7 @@ module.exports = [
     method: 'POST',
     handler: Controller.createPermissions,
     options: {
+      pre: [{ method: helpers.checkAbility('create', sysObjectsPermissions) }],
       validate: {
         params: {
           id: Joi.string()
@@ -114,6 +116,7 @@ module.exports = [
     method: 'PUT',
     handler: Controller.updatePermAction,
     options: {
+      pre: [{ method: helpers.checkAbility('update', sysObjectsPermissions) }],
       validate: {
         params: {
           id: Joi.string()
@@ -137,6 +140,7 @@ module.exports = [
     method: 'DELETE',
     handler: Controller.deletePermission,
     options: {
+      pre: [{ method: helpers.checkAbility('delete', sysObjectsPermissions) }],
       validate: {
         params: {
           id: Joi.string()

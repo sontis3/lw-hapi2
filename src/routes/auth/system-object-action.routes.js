@@ -2,6 +2,8 @@
 
 const Controller = require('../../controllers/auth/system-object-action.controller');
 const Joi = require('joi');
+const helpers = require('../../controllers/helpers');
+const sysObjects = ['all', 'allAdministration', 'systemObjectAction'];
 
 module.exports = [
   {
@@ -9,6 +11,7 @@ module.exports = [
     method: 'GET',
     handler: Controller.find,
     options: {
+      pre: [{ method: helpers.checkAbility('read', sysObjects) }],
       validate: {
         query: {
           enabled: Joi.boolean(),
@@ -27,6 +30,7 @@ module.exports = [
     method: 'POST',
     handler: Controller.create,
     options: {
+      pre: [{ method: helpers.checkAbility('create', sysObjects) }],
       validate: {
         payload: {
           name: Joi.string()
@@ -46,6 +50,7 @@ module.exports = [
     method: 'GET',
     handler: Controller.findOne,
     options: {
+      pre: [{ method: helpers.checkAbility('read', sysObjects) }],
       validate: {
         params: {
           id: Joi.string()
@@ -60,6 +65,7 @@ module.exports = [
     method: 'PUT',
     handler: Controller.update,
     options: {
+      pre: [{ method: helpers.checkAbility('update', sysObjects) }],
       validate: {
         params: {
           id: Joi.string()
@@ -74,6 +80,7 @@ module.exports = [
     method: 'DELETE',
     handler: Controller.delete,
     options: {
+      pre: [{ method: helpers.checkAbility('delete', sysObjects) }],
       validate: {
         params: {
           id: Joi.string()

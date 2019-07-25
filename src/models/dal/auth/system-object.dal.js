@@ -34,7 +34,7 @@ automapper
 const dsTemplate = [
   { _id: '5d371e097583e0aea0ec58dd', name: 'Все', tag: 'all', enabled: true },
   { _id: '5d371e4a7583e0aea0ec58de', name: 'Все Администрирование', tag: 'allAdministration', enabled: true },
-  { _id: '5d371ea57583e0aea0ec58df', name: 'Все Справочники', tag: 'allDictionaries', enabled: true },
+  { _id: '5d371ea57583e0aea0ec58df', name: 'Все Справочники', tag: 'allDirectories', enabled: true },
   { _id: '5d38297925dd557bb0e9c6ce', name: 'Все Реестры', tag: 'allCatalogs', enabled: true },
 
   { _id: '5d2f4a64caf08965a8f17bf1', name: 'Системный объект', tag: 'systemObject', enabled: true },

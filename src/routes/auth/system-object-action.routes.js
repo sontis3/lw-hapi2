@@ -72,6 +72,17 @@ module.exports = [
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
         },
+        payload: {
+          name: Joi.string()
+            .min(3)
+            .max(64)
+            .required(),
+          tag: Joi.string()
+            .min(3)
+            .max(64)
+            .required(),
+          enabled: Joi.boolean().required(),
+        },
       },
     },
   },

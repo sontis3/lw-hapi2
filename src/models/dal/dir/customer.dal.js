@@ -1,6 +1,6 @@
 'use strict';
 
-const mModel = require('../mongoose/customer.mongoose');
+const mModel = require('../../mongoose/dir/customer.mongoose');
 const automapper = require('automapper-ts');
 
 let dbKey = 'dbCustomer';

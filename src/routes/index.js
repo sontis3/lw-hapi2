@@ -8,8 +8,8 @@ const ruleRoutes = require('./auth/rule.routes');
 const userRoutes = require('./auth/user.routes');
 const collectionRoutes = require('./auth/collection.routes');
 
-const countryRoutes = require('./country.routes');
-const customerRoutes = require('./customer.routes');
+const countryRoutes = require('./dir/country.routes');
+const customerRoutes = require('./dir/customer.routes');
 const studyRoutes = require('./study.routes');
 
 module.exports.register = async server => {

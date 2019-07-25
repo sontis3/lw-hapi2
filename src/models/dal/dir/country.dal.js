@@ -1,6 +1,6 @@
 'use strict';
 
-const mModel = require('../mongoose/country.mongoose');
+const mModel = require('../../mongoose/dir/country.mongoose');
 const automapper = require('automapper-ts');
 
 let dbKey = 'dbCountry';

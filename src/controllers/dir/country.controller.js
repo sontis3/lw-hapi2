@@ -1,7 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../models/dal/country.dal');
+const Dal = require('../../models/dal/dir/country.dal');
 
 module.exports = {
   // Получить список стран.

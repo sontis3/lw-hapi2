@@ -2,6 +2,8 @@
 
 const Controller = require('../../controllers/auth/system-object.controller');
 const Joi = require('joi');
+const helpers = require('../../controllers/helpers');
+const sysObjects = ['all', 'allAdministration', 'systemObject'];
 
 module.exports = [
   {
@@ -9,6 +11,7 @@ module.exports = [
     method: 'GET',
     handler: Controller.find,
     options: {
+      pre: [{ method: helpers.checkAbility('read', sysObjects) }],
       validate: {
         query: {
           enabled: Joi.boolean(),
@@ -27,6 +30,7 @@ module.exports = [
     method: 'POST',
     handler: Controller.create,
     options: {
+      pre: [{ method: helpers.checkAbility('create', sysObjects) }],
       validate: {
         payload: {
           name: Joi.string()
@@ -41,30 +45,42 @@ module.exports = [
     },
   },
 
+  // {
+  //   path: '/api/admin/system-objects/{id}',
+  //   method: 'GET',
+  //   handler: Controller.findOne,
+  //   options: {
+  //     validate: {
+  //       params: {
+  //         id: Joi.string()
+  //           .regex(/^[0-9a-fA-F]{24}$/)
+  //           .required(),
+  //       },
+  //     },
+  //   },
+  // },
   {
     path: '/api/admin/system-objects/{id}',
-    method: 'GET',
-    handler: Controller.findOne,
+    method: 'PUT',
+    handler: Controller.update,
     options: {
+      pre: [{ method: helpers.checkAbility('update', sysObjects) }],
       validate: {
         params: {
           id: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
         },
-      },
-    },
-  },
-  {
-    path: '/api/admin/system-objects/{id}',
-    method: 'PUT',
-    handler: Controller.update,
-    options: {
-      validate: {
-        params: {
-          id: Joi.string()
-            .regex(/^[0-9a-fA-F]{24}$/)
+        payload: {
+          name: Joi.string()
+            .min(3)
+            .max(64)
             .required(),
+          tag: Joi.string()
+            .min(3)
+            .max(64)
+            .required(),
+          enabled: Joi.boolean().required(),
         },
       },
     },
@@ -74,6 +90,7 @@ module.exports = [
     method: 'DELETE',
     handler: Controller.delete,
     options: {
+      pre: [{ method: helpers.checkAbility('delete', sysObjects) }],
       validate: {
         params: {
           id: Joi.string()

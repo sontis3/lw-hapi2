@@ -1,7 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../models/dal/customer.dal');
+const Dal = require('../../models/dal/dir/customer.dal');
 
 module.exports = {
   // Получить список заказчиков.

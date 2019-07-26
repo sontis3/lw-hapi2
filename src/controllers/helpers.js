@@ -11,7 +11,7 @@ function implCheckAbility(rules, action, objectNamesArr) {
   const ability = new Ability(rules);
   const isGranted = objectNamesArr.reduce((res, currentItem) => res || ability.can(action, currentItem), false);
   if (!isGranted) {
-    throw Boom.forbidden(`Запрещено действие <${action}> для объекта [${objectNamesArr}]!`);
+    throw Boom.forbidden(`Не достаточно прав на действие <${action}> для объекта [${objectNamesArr}]!`);
   }
 }
 

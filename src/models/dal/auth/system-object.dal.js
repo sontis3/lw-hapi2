@@ -47,8 +47,10 @@ const dsTemplate = [
   { _id: '5d2f4958973a9c77b42e3a49', name: 'Роль', tag: 'role', enabled: true },
   { _id: '5d3830bf53b28626dc101600', name: 'Роль.Разрешение', tag: 'role.permission', enabled: true },
   { _id: '5d2f4958973a9c77b42e3a48', name: 'Пользователь', tag: 'user', enabled: true },
+
   { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },
   { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
+  { _id: '5d4196158c20e1a6ccde16cc', name: 'Лекарственная форма', tag: 'dosageForm', enabled: true },
 ];
 
 module.exports = {

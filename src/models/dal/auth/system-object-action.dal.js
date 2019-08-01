@@ -37,7 +37,6 @@ const dsTemplate = [
   { _id: '5d1240696e5a7a3360afd768', name: 'Изменять', tag: 'update', enabled: true },
   { _id: '5d1240736e5a7a3360afd769', name: 'Удалять', tag: 'delete', enabled: true },
   { _id: '5d2dae33d87eba6654d01ee6', name: 'Обрабатывать', tag: 'treat', enabled: true },
-  // { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
 ];
 
 module.exports = {

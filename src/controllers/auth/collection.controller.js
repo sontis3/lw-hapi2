@@ -4,6 +4,7 @@ const Boom = require('boom');
 const dalSystemObject = require('../../models/dal/auth/system-object.dal');
 const dalSystemObjectAction = require('../../models/dal/auth/system-object-action.dal');
 const dalRole = require('../../models/dal/auth/role.dal');
+const dalDosageForm = require('../../models/dal/dir/dosage-form.dal');
 
 module.exports = {
   // Удалить коллекцию
@@ -19,6 +20,9 @@ module.exports = {
         break;
       case 'role':
         Dal = dalRole;
+        break;
+      case 'dosageForm':
+        Dal = dalDosageForm;
         break;
 
       default:
@@ -54,6 +58,9 @@ module.exports = {
         break;
       case 'role':
         Dal = dalRole;
+        break;
+      case 'dosageForm':
+        Dal = dalDosageForm;
         break;
 
       default:

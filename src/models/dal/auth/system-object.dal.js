@@ -51,6 +51,7 @@ const dsTemplate = [
   { _id: '5d3052cb118ff05d802da1c7', name: 'Заказчик', tag: 'customer', enabled: true },
   { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
   { _id: '5d4196158c20e1a6ccde16cc', name: 'Лекарственная форма', tag: 'dosageForm', enabled: true },
+  { _id: '5d42eeb45a2f3e47e0f7abf7', name: 'Производитель', tag: 'manufacturer', enabled: true },
 ];
 
 module.exports = {

@@ -10,6 +10,7 @@ const collectionRoutes = require('./auth/collection.routes');
 const countryRoutes = require('./dir/country.routes');
 const customerRoutes = require('./dir/customer.routes');
 const dosageFormRoutes = require('./dir/dosage-form.routes');
+const manufacturerRoutes = require('./dir/manufacturer.routes');
 
 const studyRoutes = require('./study.routes');
 
@@ -32,6 +33,7 @@ module.exports.register = async server => {
   server.route(countryRoutes);
   server.route(customerRoutes);
   server.route(dosageFormRoutes);
-  
+  server.route(manufacturerRoutes);
+
   server.route(studyRoutes);
 };

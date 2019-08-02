@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 // Страна
 const schemaInstance = new Schema({
   name_ru: { required: true, type: String, unique: true }, // Наименование рус
-  name_en: { required: true, type: String, unique: true }, // Наименование англ.
+  name_en: { type: String }, // Наименование англ.
   country: {
     type: Schema.Types.ObjectId,
     ref: 'Country',

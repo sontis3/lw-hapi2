@@ -14,7 +14,6 @@ module.exports = [
       pre: [{ method: helpers.checkAbility('read', sysObjects) }],
       validate: {
         query: {
-          enabled: Joi.boolean(),
           short: Joi.boolean(),
         },
         // https://github.com/hapijs/hapi/issues/3706  предоставление детальной информации о валидационной ошибке
@@ -38,7 +37,9 @@ module.exports = [
             .max(64),
           name_en: Joi.string()
             .min(2)
-            .max(64),
+            .max(64)
+            .allow([null, ''])
+            .optional(),
           countryId: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),
@@ -65,9 +66,10 @@ module.exports = [
             .max(64)
             .required(),
           name_en: Joi.string()
-            .min(3)
+            .min(2)
             .max(64)
-            .required(),
+            .allow([null, ''])
+            .optional(),
           countryId: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),

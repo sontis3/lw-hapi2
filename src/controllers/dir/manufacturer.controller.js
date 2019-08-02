@@ -17,8 +17,8 @@ module.exports = {
 
   // Создать нового производителя
   async create(request, h) {
-    const customer = request.payload;
-    const result = await Dal.create(customer).catch(err => {
+    const newObject = request.payload;
+    const result = await Dal.create(newObject).catch(err => {
       return Boom.badRequest(err.message);
     });
     return result;
@@ -27,12 +27,12 @@ module.exports = {
   // изменить производителя
   async update(request, h) {
     const id = request.params.id;
-    const customer = request.payload;
-    if (!customer) {
+    const updObject = request.payload;
+    if (!updObject) {
       return Boom.badData('No manufacturer request data');
     }
 
-    let result = await Dal.update(id, customer)
+    let result = await Dal.update(id, updObject)
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Документ с id=${id} не найден!`);

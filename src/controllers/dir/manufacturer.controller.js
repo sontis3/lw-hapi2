@@ -32,7 +32,7 @@ module.exports = {
       return Boom.badData('No manufacturer request data');
     }
 
-    let result = await Dal.update(id, updObject)
+    const result = await Dal.update(id, updObject)
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Документ с id=${id} не найден!`);
@@ -53,7 +53,7 @@ module.exports = {
   // удалить производителя
   async delete(request, h) {
     const id = request.params.id;
-    let result = await Dal.delete(id)
+    const result = await Dal.delete(id)
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Документ с id=${id} не найден!`);

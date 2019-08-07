@@ -5,6 +5,8 @@ const dalSystemObject = require('../../models/dal/auth/system-object.dal');
 const dalSystemObjectAction = require('../../models/dal/auth/system-object-action.dal');
 const dalRole = require('../../models/dal/auth/role.dal');
 const dalDosageForm = require('../../models/dal/dir/dosage-form.dal');
+const dalCountry = require('../../models/dal/dir/country.dal');
+const dalmanufacturer = require('../../models/dal/dir/manufacturer.dal');
 
 module.exports = {
   // Удалить коллекцию
@@ -21,14 +23,20 @@ module.exports = {
       case 'role':
         Dal = dalRole;
         break;
+      case 'country':
+        Dal = dalCountry;
+        break;
       case 'dosageForm':
         Dal = dalDosageForm;
+        break;
+      case 'manufacturer':
+        Dal = dalmanufacturer;
         break;
 
       default:
         return Boom.notFound(`Коллекция ${id} не найдена!`);
     }
-    let result = await Dal.dropCollection()
+    const result = await Dal.dropCollection()
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Коллекция ${id} не найдена!`);
@@ -59,14 +67,20 @@ module.exports = {
       case 'role':
         Dal = dalRole;
         break;
+      case 'country':
+        Dal = dalCountry;
+        break;
       case 'dosageForm':
         Dal = dalDosageForm;
+        break;
+      case 'manufacturer':
+        Dal = dalmanufacturer;
         break;
 
       default:
         return Boom.notFound(`Коллекция ${id} не найдена!`);
     }
-    let result = await Dal.restoreCollection()
+    const result = await Dal.restoreCollection()
       .then(dbResult => {
         if (dbResult === null) {
           return Boom.notFound(`Документ с id=${id} не найден!`);

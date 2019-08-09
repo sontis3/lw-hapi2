@@ -1,11 +1,11 @@
 'use strict';
 
 const Boom = require('boom');
-const Dal = require('../../models/dal/dir/country.dal');
+const Dal = require('../../models/dal/catalog/contract.dal');
 
 module.exports = {
-  // Получить список стран.
-  // description: По умолчанию все страны.
+  // Получить список контрактов.
+  // По умолчанию все контракты.
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(request, h) {
@@ -16,12 +16,7 @@ module.exports = {
     return result;
   },
 
-  // Создать новую страну
-  // {
-  //   "name_ru": "Украина",
-  //   "name_en": "Ukraine",
-  //   "enabled": false
-  // }
+  // создать новый контракт
   async create(request, h) {
     const country = request.payload;
     const result = await Dal.create(country).catch(err => {

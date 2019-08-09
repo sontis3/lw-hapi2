@@ -3,9 +3,9 @@
 const mModel = require('../../mongoose/auth/system-object.mongoose');
 const automapper = require('automapper-ts');
 
-let dbKey = 'dbSystemObject';
-let dbShortKey = 'dbShortSystemObject';
-let apiKey = 'apiSystemObject';
+const dbKey = 'dbSystemObject';
+const dbShortKey = 'dbShortSystemObject';
+const apiKey = 'apiSystemObject';
 
 automapper
   .createMap(dbKey, apiKey)
@@ -52,6 +52,9 @@ const dsTemplate = [
   { _id: '5d3052e8118ff05d802da1c8', name: 'Страна', tag: 'country', enabled: true },
   { _id: '5d4196158c20e1a6ccde16cc', name: 'Лекарственная форма', tag: 'dosageForm', enabled: true },
   { _id: '5d42eeb45a2f3e47e0f7abf7', name: 'Производитель', tag: 'manufacturer', enabled: true },
+
+  { _id: '5d4d49c213104f7bfc06ca2c', name: 'Договор', tag: 'contract', enabled: true },
+  { _id: '5d4d4a5b13104f7bfc06ca2d', name: 'Исследование', tag: 'study', enabled: true },
 ];
 
 module.exports = {
@@ -60,7 +63,7 @@ module.exports = {
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(filter) {
-    let dbSelector = {};
+    const dbSelector = {};
     if (typeof filter.enabled !== 'undefined') {
       dbSelector.enabled = filter.enabled;
     }

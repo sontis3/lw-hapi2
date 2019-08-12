@@ -16,11 +16,6 @@ module.exports = [
         query: {
           short: Joi.boolean(),
         },
-        // https://github.com/hapijs/hapi/issues/3706  предоставление детальной информации о валидационной ошибке
-        // ,
-        // failAction: (request, h, err) => {
-        //   throw err;
-        // }
       },
     },
   },

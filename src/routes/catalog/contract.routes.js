@@ -1,12 +1,25 @@
 'use strict';
 
 const ContractController = require('../../controllers/catalog/contract.controller');
+const Joi = require('joi');
+const helpers = require('../../controllers/helpers');
+const sysObjects = ['all', 'allCatalogs', 'contract'];
 
 module.exports = [
   {
     path: '/api/catalog/contracts',
     method: 'GET',
     handler: ContractController.find,
+    options: {
+      pre: [{ method: helpers.checkAbility('read', sysObjects) }],
+      validate: {
+        query: {
+          year: Joi.number()
+            .min(2018)
+            .max(2038),
+        },
+      },
+    },
   },
   {
     path: '/api/catalog/contracts',

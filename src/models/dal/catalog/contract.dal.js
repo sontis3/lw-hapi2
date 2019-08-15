@@ -25,40 +25,33 @@ automapper
 
 automapper
   .createMap(apiKey, dbKey)
-  .forMember('name_ru', opts => opts.mapFrom('name_ru'))
+  .forMember('reg_code', opts => opts.mapFrom('reg_code'))
   .forMember('name_en', opts => opts.mapFrom('name_en'))
   .forMember('country', opts => opts.mapFrom('countryId'))
   .ignoreAllNonExisting();
 
-// // исходные данные
-// const dsTemplate = [
-//   { _id: '5d41a5f06a9f5a11f0dc7265', name_ru: 'АО "Пептек"', country: '5caf4dd959c33c3884502fb4' },
-//   { _id: '5d41a62d6a9f5a11f0dc7267', name_ru: 'ТОО "Вива фарм"', country: '5caf4eb768c4870b983f2d30' },
-//   { _id: '5d41a6306a9f5a11f0dc7268', name_ru: 'Пфайзер Италия С.рЛ', country: '5d445159368238295c40a3f6' },
-//   { _id: '5d41a63e6a9f5a11f0dc7269', name_ru: 'Н.В. Органон', country: '5d4a9779a9fbfea2dc175560' },
-//   { _id: '5d41a6416a9f5a11f0dc726a', name_ru: 'Фами Кер Лимитед', country: '5cc1d64271c266050488bcce' },
-//   { _id: '5d41a6436a9f5a11f0dc726b', name_ru: 'Байер Фарма АГ', country: '5d3ae0e0bdaf4893c8be216f' },
-//   { _id: '5d41a6456a9f5a11f0dc726c', name_ru: 'Хетеро  Лабс  Лимитед', country: '5cc1d64271c266050488bcce' },
-//   { _id: '5d41a6476a9f5a11f0dc726d', name_ru: 'Новартис Фарма АГ', country: '5d3ad3a90275fab8c0767603' },
-//   { _id: '5d41a6496a9f5a11f0dc726e', name_ru: 'Люпин Лтд.', country: '5cc1d64271c266050488bcce' },
-//   { _id: '5d41a64b6a9f5a11f0dc726f', name_ru: 'ОАО "Гедеон Рихтер"', country: '5d4a9984a9fbfea2dc175561' },
-//   { _id: '5d41a64d6a9f5a11f0dc7270', name_ru: 'Такеда ГмбХ', country: '5d3ae0e0bdaf4893c8be216f' },
-//   { _id: '5d41a64f6a9f5a11f0dc7271', name_ru: 'qqqq', country: '5d3ae0e0bdaf4893c8be216f' },
-//   { _id: '5d41a6516a9f5a11f0dc7272', name_ru: 'aaaa', country: '5d3ae0e0bdaf4893c8be216f' },
-// ];
-
 module.exports = {
-  // Получить список производителей.
+  // Получить список контрактов.
   // По умолчанию все.
-  // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
+  // Фильтр:
+  // year - год регистрации
   async find(filter) {
     let query;
-    if (typeof filter.short !== 'undefined' && filter.short === true) {
-      query = mModel.find({}).select({ name: 1 });
+    if (typeof filter.year !== 'undefined') {
+      query = mModel.aggregate([
+        {
+          $match: {
+            $expr: {
+              $eq: [{ $year: '$reg_date' }, filter.year],
+            },
+          },
+        },
+      ]);
+      // query = mModel.find({}).select({ name: 1 });
     } else {
       query = mModel.find({});
     }
-    query.populate('country', 'name_ru');
+    // query.populate('country', 'name_ru');
 
     return query.exec().then(dbResult => {
       if (filter.short !== true) {

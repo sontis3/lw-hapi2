@@ -3,9 +3,9 @@
 const mModel = require('../../mongoose/dir/customer.mongoose');
 const automapper = require('automapper-ts');
 
-let dbKey = 'dbCustomer';
-let dbShortKey = 'dbShortCustomer';
-let apiKey = 'apiCustomer';
+const dbKey = 'dbCustomer';
+const dbShortKey = 'dbShortCustomer';
+const apiKey = 'apiCustomer';
 
 automapper
   .createMap(dbKey, apiKey)
@@ -24,6 +24,8 @@ automapper
   .forMember('email', opts => opts.mapFrom('email'))
   .forMember('phone_1', opts => opts.mapFrom('phone_1'))
   .forMember('phone_2', opts => opts.mapFrom('phone_2'))
+  .forMember('createdAt', opts => opts.mapFrom('createdAt'))
+  .forMember('updatedAt', opts => opts.mapFrom('updatedAt'))
 
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
@@ -56,7 +58,7 @@ module.exports = {
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(filter) {
-    let dbSelector = {};
+    const dbSelector = {};
     if (typeof filter.enabled !== 'undefined') {
       dbSelector.enabled = filter.enabled;
     }

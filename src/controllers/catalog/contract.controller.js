@@ -9,8 +9,7 @@ module.exports = {
   // Если имеется параметр enabled, то true - активные, false - неактивные
   // Если имеется параметр short, то true - краткий ответ (имя, ид объекта), false - полный ответ (все поля).
   async find(request, h) {
-    const filter = request.query;
-    const result = await Dal.find(filter).catch(err => {
+    const result = await Dal.find(request.query).catch(err => {
       return Boom.badRequest(err.message);
     });
     return result;

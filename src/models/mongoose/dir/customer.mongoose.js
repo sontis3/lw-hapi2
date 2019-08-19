@@ -23,8 +23,8 @@ const schemaInstance = new Schema({
   phone_1: { required: true, type: String, unique: true }, // Телефон1
   phone_2: { type: String }, // Телефон2
   person: { type: String }, // Контактное лицо
-  createdAt: { required: true, type: Date, default: Date.now() }, // дата создания документа
-  updatedAt: { required: false, type: Date, default: Date.now() }, // дата последнего изменения документа
+  createdAt: { required: true, type: Date, default: Date.now }, // дата создания документа
+  updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });
 
 schemaInstance.pre('findOneAndUpdate', function(next) {

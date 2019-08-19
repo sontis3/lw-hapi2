@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 // Приложение к договору
 const addendumSchema = new Schema({
   reg_code: { required: true, type: String, unique: true }, // Регистрационный номер
-  reg_date: { required: true, type: Date, default: Date.now() }, // дата регистрации
+  reg_date: { required: true, type: Date, default: Date.now }, // дата регистрации
   theme: { required: true, type: String, unique: true }, // Тема
   fileRef: { type: Schema.Types.ObjectId, unique: true }, // ссылка на файл
 });
@@ -14,9 +14,9 @@ const addendumSchema = new Schema({
 // Договор
 const schemaInstance = new Schema({
   reg_code: { required: true, type: String, unique: true }, // Регистрационный номер
-  reg_date: { required: true, type: Date, default: Date.now() }, // дата регистрации
+  reg_date: { required: true, type: Date, default: Date.now }, // дата регистрации
   theme: { required: true, type: String, unique: true }, // Тема
-  deadline_date: { required: true, type: Date, default: Date.now() }, // Срок действия договора
+  deadline_date: { required: true, type: Date, default: Date.now }, // Срок действия договора
   customer: {
     type: Schema.Types.ObjectId,
     ref: 'Customer',
@@ -33,8 +33,8 @@ const schemaInstance = new Schema({
   }, // Заказчик исследования
   fileRef: { type: Schema.Types.ObjectId, unique: true }, // ссылка на файл
   addendums: [addendumSchema], // дополнения к договору
-  createdAt: { required: true, type: Date, default: Date.now() }, // дата создания документа
-  updatedAt: { required: false, type: Date, default: Date.now() }, // дата последнего изменения документа
+  createdAt: { required: true, type: Date, default: Date.now }, // дата создания документа
+  updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });
 
 schemaInstance.pre('findOneAndUpdate', function(next) {

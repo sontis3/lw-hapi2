@@ -16,8 +16,8 @@ const schemaInstance = new Schema({
     validate: v => mongoose.model('Role').findById(v).exec(),    // валидация наличия в базе id роли
     message: props => `Попытка использовать отсутствующую роль: ${props.value}`,
   }, // ссылка на Роль
-  createdAt: { required: true, type: Date, default: Date.now() }, // дата создания документа
-  updatedAt: { required: false, type: Date, default: Date.now() }, // дата последнего изменения документа
+  createdAt: { required: true, type: Date, default: Date.now }, // дата создания документа
+  updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
 });
 
 schemaInstance.pre('findOneAndUpdate', function(next) {

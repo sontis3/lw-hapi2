@@ -62,7 +62,7 @@ module.exports = {
     });
   },
 
-  // Создать нового производителя
+  // Создать новый контракт
   async create(apiModel) {
     const dbModel = automapper.map(apiKey, dbKey, apiModel);
 

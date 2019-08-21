@@ -10,10 +10,12 @@ const apiKey = 'apiContract';
 automapper
   .createMap(dbKey, apiKey)
   .forMember('id', opts => opts.sourceObject['_id'].subProp)
-  .forMember('name_ru', opts => opts.mapFrom('name_ru'))
-  .forMember('name_en', opts => opts.mapFrom('name_en'))
-  .forMember('country.id', opts => opts.mapFrom('country._id'))
-  .forMember('country.name_ru', opts => opts.mapFrom('country.name_ru'))
+  .forMember('reg_code', opts => opts.mapFrom('reg_code'))
+  .forMember('reg_date', opts => opts.mapFrom('reg_date'))
+  .forMember('theme', opts => opts.mapFrom('theme'))
+  .forMember('deadline_date', opts => opts.mapFrom('deadline_date'))
+  .forMember('customer.id', opts => opts.mapFrom('customer._id'))
+  .forMember('customer.name', opts => opts.mapFrom('customer.name'))
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
 
@@ -26,8 +28,10 @@ automapper
 automapper
   .createMap(apiKey, dbKey)
   .forMember('reg_code', opts => opts.mapFrom('reg_code'))
-  .forMember('name_en', opts => opts.mapFrom('name_en'))
-  .forMember('country', opts => opts.mapFrom('countryId'))
+  .forMember('reg_date', opts => opts.mapFrom('reg_date'))
+  .forMember('theme', opts => opts.mapFrom('theme'))
+  .forMember('deadline_date', opts => opts.mapFrom('deadline_date'))
+  .forMember('customer', opts => opts.mapFrom('customerId'))
   .ignoreAllNonExisting();
 
 module.exports = {

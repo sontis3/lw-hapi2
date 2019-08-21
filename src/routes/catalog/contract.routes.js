@@ -25,6 +25,24 @@ module.exports = [
     path: '/api/catalog/contracts',
     method: 'POST',
     handler: ContractController.create,
+    options: {
+      pre: [{ method: helpers.checkAbility('create', sysObjects) }],
+      validate: {
+        payload: {
+          reg_code: Joi.string()
+            .min(6)
+            .max(64),
+          reg_date: Joi.date(),
+          theme: Joi.string()
+            .min(8)
+            .max(128),
+          deadline_date: Joi.date(),
+          customerId: Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        },
+      },
+    },
   },
 
   {

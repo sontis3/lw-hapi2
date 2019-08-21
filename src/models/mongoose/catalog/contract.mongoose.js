@@ -16,7 +16,7 @@ const schemaInstance = new Schema({
   reg_code: { required: true, type: String, unique: true }, // Регистрационный номер
   reg_date: { required: true, type: Date, default: Date.now }, // дата регистрации
   theme: { required: true, type: String, unique: true }, // Тема
-  deadline_date: { required: true, type: Date, default: Date.now }, // Срок действия договора
+  deadline_date: { type: Date, default: Date.now }, // Срок действия договора
   customer: {
     type: Schema.Types.ObjectId,
     ref: 'Customer',

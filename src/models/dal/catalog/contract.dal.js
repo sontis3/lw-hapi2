@@ -28,8 +28,8 @@ automapper
 automapper
   .createMap(apiKey, dbKey)
   .forMember('reg_code', opts => opts.mapFrom('reg_code'))
-  .forMember('reg_date', opts => opts.mapFrom('reg_date'))
   .forMember('theme', opts => opts.mapFrom('theme'))
+  .forMember('reg_date', opts => opts.mapFrom('reg_date'))
   .forMember('deadline_date', opts => opts.mapFrom('deadline_date'))
   .forMember('customer', opts => opts.mapFrom('customerId'))
   .ignoreAllNonExisting();

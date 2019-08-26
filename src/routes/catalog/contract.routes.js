@@ -33,10 +33,10 @@ module.exports = [
             .min(6)
             .max(64),
           reg_date: Joi.date(),
+          deadline_date: Joi.date(),
           theme: Joi.string()
             .min(8)
             .max(128),
-          deadline_date: Joi.date(),
           customerId: Joi.string()
             .regex(/^[0-9a-fA-F]{24}$/)
             .required(),

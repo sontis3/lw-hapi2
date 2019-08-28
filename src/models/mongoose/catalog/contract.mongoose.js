@@ -31,7 +31,10 @@ const schemaInstance = new Schema({
       message: props => `Попытка использовать отсутствующего заказчика: ${props.value}`,
     },
   }, // Заказчик исследования
-  fileRef: { type: Schema.Types.ObjectId, unique: true }, // ссылка на файл
+  fileRef: {
+    type: Schema.Types.ObjectId,
+    index: { unique: true, partialFilterExpression: { fileRef: { $exists: true } } }, // индех только на существующих полях
+  }, // ссылка на файл
   addendums: [addendumSchema], // дополнения к договору
   createdAt: { required: true, type: Date, default: Date.now }, // дата создания документа
   updatedAt: { required: false, type: Date, default: Date.now }, // дата последнего изменения документа
@@ -41,5 +44,8 @@ schemaInstance.pre('findOneAndUpdate', function(next) {
   this._update.updatedAt = Date.now();
   next();
 });
+
+// уникальный индекс для существующих приложений
+schemaInstance.path('addendums').index({ unique: true, partialFilterExpression: { addendums: { $exists: true } } });
 
 module.exports = mongoose.model('Contract', schemaInstance);

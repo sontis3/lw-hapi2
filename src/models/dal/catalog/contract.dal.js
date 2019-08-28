@@ -9,13 +9,13 @@ const apiKey = 'apiContract';
 
 automapper
   .createMap(dbKey, apiKey)
-  .forMember('id', opts => opts.sourceObject['_id'].subProp)
+  .forMember('id', opts => opts.mapFrom('_id'))
   .forMember('reg_code', opts => opts.mapFrom('reg_code'))
-  .forMember('reg_date', opts => opts.mapFrom('reg_date'))
   .forMember('theme', opts => opts.mapFrom('theme'))
+  .forMember('reg_date', opts => opts.mapFrom('reg_date'))
   .forMember('deadline_date', opts => opts.mapFrom('deadline_date'))
-  .forMember('customer.id', opts => opts.mapFrom('customer._id'))
-  .forMember('customer.name', opts => opts.mapFrom('customer.name'))
+  .forMember('customer.id', opts => opts.mapFrom('customers._id'))
+  .forMember('customer.name', opts => opts.mapFrom('customers.name'))
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
 
@@ -50,6 +50,15 @@ module.exports = {
             },
           },
         },
+        {
+          $lookup: {
+            from: 'customers',
+            localField: 'customer',
+            foreignField: '_id',
+            as: 'customers',
+          },
+        },
+        { $unwind: '$customers' },
       ]);
       // query = mModel.find({}).select({ name: 1 });
     } else {

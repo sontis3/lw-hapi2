@@ -16,6 +16,8 @@ automapper
   .forMember('deadline_date', opts => opts.mapFrom('deadline_date'))
   .forMember('customer.id', opts => opts.mapFrom('customers._id'))
   .forMember('customer.name', opts => opts.mapFrom('customers.name'))
+  .forMember('createdAt', opts => opts.mapFrom('createdAt'))
+  .forMember('updatedAt', opts => opts.mapFrom('updatedAt'))
   .forMember('__v', opts => opts.ignore())
   .ignoreAllNonExisting();
 
